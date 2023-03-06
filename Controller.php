@@ -2,7 +2,6 @@
 
 namespace Zoomx\Controllers;
 
-
 use modX;
 
 abstract class Controller
@@ -11,6 +10,12 @@ abstract class Controller
 
     public function __construct(modX $modx)
     {
-        $this->modx = $modx;
+      $this->modx = $modx;
+      $this->disableAutoloadRes();
+    }
+
+    private function disableAutoloadRes()
+    {
+      zoomx()->autoloadResource(false);
     }
 }
