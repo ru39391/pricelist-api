@@ -30,6 +30,7 @@ class GetController extends AuthController
           'group_ids' => $this->getArr($item->getTVValue('group_ids')),
           'show_pl' => (bool)$item->getTVValue('tv__show_pricelist'),
           'publishedon' => $item->publishedon,
+          'editedon' => $item->editedon,
           'isfolder' => $item->isfolder,
           'template' => $item->template,
           'uri' => $item->uri,
