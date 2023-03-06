@@ -3,6 +3,7 @@
 /** @var modX  $modx */
 
 $router->get('services', Zoomx\Controllers\ServicesController::class);
+$router->get('api/pages', Zoomx\Controllers\Api\Page\GetController::class);
 $router->get('api/depts', Zoomx\Controllers\Api\Department\GetController::class);
 $router->get('api/subdepts', Zoomx\Controllers\Api\Subdepartment\GetController::class);
 $router->get('api/svgroups', Zoomx\Controllers\Api\Group\GetController::class);
