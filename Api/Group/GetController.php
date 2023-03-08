@@ -8,20 +8,17 @@ class GetController extends AuthController
 {
   public function index()
   {
-    $plGroups = $this->modx->getCollection(\PricelistGroupOfServices::class);
-    if (count($plGroups) > 0) {
-      $groups = array();
-      foreach ($plGroups as $item) {
-        array_push($groups, array(
-          'id' => $item->id,
-          'name' => $item->name,
-          'department_id' => $item->department_id,
-          'specialization_id' => $item->specialization_id,
-          'other_id' => $item->other_id,
-          'page_id' => $item->page_id,
-          'sort' => $item->sort,
-        ));
-      };
+    $groupsColl = $this->modx->getCollection(\PricelistGroupOfServices::class);
+    if (count($groupsColl) > 0) {
+      $groups = array_map(fn($item) => array(
+        'id' => $item->id,
+        'name' => $item->name,
+        'dept' => $item->department_id,
+        'subdept' => $item->specialization_id,
+        'other_id' => $item->other_id,
+        'page_id' => $item->page_id,
+        'sort' => $item->sort,
+      ), $groupsColl);
 
       return jsonx($groups);
     }
