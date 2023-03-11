@@ -12,8 +12,8 @@ class GetController extends AuthController
     if (count($plColl) > 0) {
       $pl = array_map(fn($item) => array(
         'id' => $item->id,
-        'name' => $item->name,
-        'price' => $item->price,
+        'name' => trim($item->name),
+        'price' => (int)$item->price,
         'dept' => $item->department_id,
         'subdept' => $item->specialization_id,
         'group' => $item->group_of_services_id,

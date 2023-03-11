@@ -1,6 +1,6 @@
 <?php
 
-namespace Zoomx\Controllers\Api\Page;
+namespace Zoomx\Controllers\Api\Res;
 
 use Zoomx\Controllers\Api\AuthController as AuthController;
 
@@ -41,9 +41,9 @@ class GetController extends AuthController
 
     $resColl = $this->modx->getCollection(\modResource::class, $query);
     if (count($resColl) > 0) {
-      $pages = array_map(fn($item) => array(
+      $resources = array_map(fn($item) => array(
         'id' => $item->id,
-        'pagetitle' => $item->pagetitle,
+        'pagetitle' => trim($item->pagetitle),
         'parent' => $item->parent,
         'dept' => $this->getArr($item->dept_id),
         'subdept' => $this->getArr($item->subdept_id),
@@ -55,7 +55,7 @@ class GetController extends AuthController
         'uri' => $item->uri,
       ), $resColl);
 
-      return jsonx($pages);
+      return jsonx($resources);
     }
 
     return jsonx([], [], 404);

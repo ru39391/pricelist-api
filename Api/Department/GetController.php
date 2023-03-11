@@ -10,7 +10,7 @@ class GetController extends AuthController
     $arr = $this->modx->getCollection(\PricelistSpecialization::class, array('department_id' => $department_id));
     return array_map(fn($item) => array(
       'id' => $item->id,
-      'name' => $item->name,
+      'name' => trim($item->name),
     ), $arr);
   }
 
@@ -20,7 +20,7 @@ class GetController extends AuthController
     if (count($deptsColl) > 0) {
       $depts = array_map(fn($item) => array(
         'id' => $item->id,
-        'name' => $item->name,
+        'name' => trim($item->name),
         'subdepts' => $this->getSubdepts($item->id),
         'other_id' => $item->other_id,
         'page_id' => $item->page_id,

@@ -12,7 +12,7 @@ class GetController extends AuthController
     if (count($subdeptsColl) > 0) {
       $subdepts = array_map(fn($item) => array(
         'id' => $item->id,
-        'name' => $item->name,
+        'name' => trim($item->name),
         'dept' => $item->department_id,
         'other_id' => $item->other_id,
         'page_id' => $item->page_id,
