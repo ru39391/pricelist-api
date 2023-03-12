@@ -8,7 +8,7 @@ class GetController extends AuthController
 {
   public function index()
   {
-    $groupsColl = $this->modx->getCollection(\PricelistGroupOfServices::class);
+    $groupsColl = $this->modx->getCollection(\PricelistGroupOfServices::class, array('name:!=' => ' '));
     if (count($groupsColl) > 0) {
       $groups = array_map(fn($item) => array(
         'id' => $item->id,

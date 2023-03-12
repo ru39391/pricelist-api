@@ -6,8 +6,8 @@ use Zoomx\Controllers\Api\AuthController as AuthController;
 
 class GetController extends AuthController
 {
-  private function getSubdepts($department_id) {
-    $arr = $this->modx->getCollection(\PricelistSpecialization::class, array('department_id' => $department_id));
+  private function getChildren($objClass, $department_id) {
+    $arr = $this->modx->getCollection($objClass, array('department_id' => $department_id));
     return array_map(fn($item) => array(
       'id' => $item->id,
       'name' => trim($item->name),
@@ -21,7 +21,8 @@ class GetController extends AuthController
       $depts = array_map(fn($item) => array(
         'id' => $item->id,
         'name' => trim($item->name),
-        'subdepts' => $this->getSubdepts($item->id),
+        'subdepts' => $this->getChildren(\PricelistSpecialization::class, $item->id),
+        'groups' => $this->getChildren(\PricelistGroupOfServices::class, $item->id),
         'other_id' => $item->other_id,
         'page_id' => $item->page_id,
         'sort' => $item->sort,
