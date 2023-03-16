@@ -10,6 +10,14 @@ class GetController extends AuthController
     return (bool)$str ? array_map(fn($item) => (int)$item, explode(',', (string)$str)) : array();
   }
 
+  private function getParent($id) {
+    $res = $this->modx->getObject(\modResource::class, array('id' => $id));
+    return array(
+      'pagetitle' => trim($res->pagetitle),
+      'uri' => $res->uri,
+    );
+  }
+
   public function index()
   {
     $query = $this->modx->newQuery(\modResource::class);
@@ -26,8 +34,10 @@ class GetController extends AuthController
       'modResource.published as published',
       'department_id.value as dept_id',
       'specialization_ids.value as subdept_id',
-      'group_ids.value as group_id'
+      'group_ids.value as group_id',
+      'template.description as template_desc'
     ));
+    $query->leftJoin(\modTemplate::class, 'template', 'modResource.template = template.id');
     $query->leftJoin(\modTemplateVarResource::class, 'department_id', 'modResource.id = department_id.contentid AND department_id.tmplvarid = 25');
     $query->leftJoin(\modTemplateVarResource::class, 'specialization_ids', 'modResource.id = specialization_ids.contentid AND specialization_ids.tmplvarid = 26');
     $query->leftJoin(\modTemplateVarResource::class, 'group_ids', 'modResource.id = group_ids.contentid AND group_ids.tmplvarid = 28');
@@ -43,16 +53,18 @@ class GetController extends AuthController
     if (count($resColl) > 0) {
       $resources = array_map(fn($item) => array(
         'id' => $item->id,
-        'pagetitle' => trim($item->pagetitle),
-        'parent' => $item->parent,
+        'isParent' => (bool)$item->isfolder,
+        'res' => array(
+          'pagetitle' => trim($item->pagetitle),
+          'uri' => $item->uri,
+        ),
+        'parent' => $this->getParent($item->parent),
+        'template' => $item->template_desc,
         'dept' => $this->getArr($item->dept_id),
         'subdept' => $this->getArr($item->subdept_id),
         'group' => $this->getArr($item->group_id),
         'publishedon' => $item->publishedon,
         'editedon' => $item->editedon,
-        'isfolder' => $item->isfolder,
-        'template' => $item->template,
-        'uri' => $item->uri,
       ), $resColl);
 
       return jsonx($resources);
