@@ -16,21 +16,22 @@ class GetController extends AuthController
 
   public function index()
   {
-    $deptsColl = $this->modx->getCollection(\PricelistDepartment::class, array('name:!=' => ''));
+    $deptsColl = $this->modx->getCollection(\pricelistDept::class, array('name:!=' => ''));
     if (count($deptsColl) > 0) {
       $depts = array_map(fn($item) => array(
         'id' => $item->id,
+        'item_id' => $item->item_id,
         'name' => trim($item->name),
-        'subdepts' => $this->getChildren(\PricelistSpecialization::class, $item->id),
-        'groups' => $this->getChildren(\PricelistGroupOfServices::class, $item->id),
-        'other_id' => $item->other_id,
-        'page_id' => $item->page_id,
-        'sort' => $item->sort,
+        //'subdepts' => $this->getChildren(\PricelistSpecialization::class, $item->id),
+        //'groups' => $this->getChildren(\PricelistGroupOfServices::class, $item->id),
+        //'other_id' => $item->other_id,
+        //'page_id' => $item->page_id,
+        //'sort' => $item->sort,
       ), $deptsColl);
 
       return jsonx($depts);
     }
 
-    return jsonx([], [], 404);
+    return jsonx([], [], 400);
   }
 }
