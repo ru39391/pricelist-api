@@ -2,7 +2,7 @@
 
 namespace Zoomx\Controllers\Api\Res;
 
-use Zoomx\Controllers\Api\AuthController as AuthController;
+use Zoomx\Controllers\Api\AuthController;
 
 class GetController extends AuthController
 {

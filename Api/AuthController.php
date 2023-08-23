@@ -3,7 +3,7 @@
 namespace Zoomx\Controllers\Api;
 
 use modX;
-//use Zoomx\Controllers\Api\BaseController as BaseController;
+use Zoomx\Controllers\BaseController;
 
 class AuthController extends BaseController
 {

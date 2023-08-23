@@ -2,7 +2,7 @@
 
 namespace Zoomx\Controllers;
 
-class ServicesController extends Controller
+class ServicesController extends BaseController
 {
   public function index()
   {
