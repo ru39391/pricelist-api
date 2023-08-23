@@ -20,6 +20,8 @@
       phptype="integer" null="false" default="0" />
     <field key="isComplex" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer"
       null="false" default="0" />
+    <field key="complex" dbtype="text" null="false" default="" />
+
     <field key="isVisible" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer"
       null="false" default="1" />
     <field key="index" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
@@ -31,15 +33,6 @@
       cardinality="one" owner="foreign" />
     <aggregate alias="Group" class="pricelistGroup" local="group" foreign="item_id"
       cardinality="one" owner="foreign" />
-  </object>
-
-  <object class="pricelistComplexItem" table="pricelist_complex_items" extends="xPDOSimpleObject">
-    <field key="item_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
-      null="false" default="" />
-    <field key="complex_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
-      null="false" default="" />
-    <field key="counter" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
-      null="false" default="" />
   </object>
 
   <object class="pricelistDept" table="pricelist_depts" extends="xPDOSimpleObject">

@@ -7,7 +7,7 @@ use Zoomx\Controllers\Api\AuthController;
 class GetController extends AuthController
 {
   private function getChildren($objClass, $department_id) {
-    $arr = $this->modx->getCollection($objClass, array('department_id' => $department_id));
+    $arr = zoomx('modx')->getCollection($objClass, array('department_id' => $department_id));
     return array_map(fn($item) => array(
       'id' => $item->id,
       'name' => trim($item->name),
@@ -16,7 +16,7 @@ class GetController extends AuthController
 
   public function index()
   {
-    $deptsColl = $this->modx->getCollection(\pricelistDept::class, array('name:!=' => ''));
+    $deptsColl = zoomx('modx')->getCollection(\pricelistDept::class, array('name:!=' => ''));
     if (count($deptsColl) > 0) {
       $depts = array_map(fn($item) => array(
         'id' => $item->id,

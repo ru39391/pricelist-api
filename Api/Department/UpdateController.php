@@ -3,28 +3,33 @@
 namespace Zoomx\Controllers\Api\Department;
 
 use Zoomx\Controllers\Constants;
-use Zoomx\Controllers\Api\AuthController;
-use Zoomx\Controllers\Api\Department\DeptsTrait;
+use Zoomx\Controllers\Api\Department\BaseDeptController;
 
-class UpdateController extends AuthController
+class UpdateController extends BaseDeptController
 {
-  use DeptsTrait;
-
-  private function updateDept($data)
+  private function updateItem($data)
   {
+    $response = zoomx('modx')->getObject(\pricelistDept::class, [
+      'item_id' => $data['item_id']
+    ]);
+
+    if ($response !== null) {
+      $response->set('name', $data['name']);
+      $response->save();
+      zoomx('modx')->cacheManager->clearCache();
+
+      return $response->toArray();
+    }
+    return null;
+  }
+
+  public function handleItem($data)
+  {
+    return $this->updateItem($data);
   }
 
   public function index()
   {
-    $response = [];
-    $data = $this->getData();
-    $validatedData = array_map(fn($item) => $this->validateData($item), $data);
-
-    if (in_array(null, $validatedData, true)) {
-    }
-
-    $responseCode = $response['success'] ? 201 : 400;
-
-    return jsonx($response, [], $responseCode);
+    return $this->handleData(['error_values' => Constants::VALUES_UPDATE_ERROR_MSG]);
   }
 }

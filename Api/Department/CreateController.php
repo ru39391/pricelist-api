@@ -3,14 +3,11 @@
 namespace Zoomx\Controllers\Api\Department;
 
 use Zoomx\Controllers\Constants;
-use Zoomx\Controllers\Api\AuthController;
-use Zoomx\Controllers\Api\Department\DeptsTrait;
+use Zoomx\Controllers\Api\Department\BaseDeptController;
 
-class CreateController extends AuthController
+class CreateController extends BaseDeptController
 {
-  use DeptsTrait;
-
-  private function createDept($data)
+  private function createItem($data)
   {
     $response = zoomx('modx')->newObject(\pricelistDept::class, $data);
     $response->save();
@@ -19,46 +16,13 @@ class CreateController extends AuthController
     return $response->toArray();
   }
 
+  public function handleItem($data)
+  {
+    return $this->createItem($data);
+  }
+
   public function index()
   {
-    $response = [];
-    $data = $this->getData();
-    $validatedData = array_map(fn($item) => $this->validateData($item), $data);
-
-    if (in_array(null, $validatedData, true)) {
-      foreach ([
-        'success' => false,
-        'message' => Constants::DATA_ERROR_MSG,
-      ] as $key => $value) {
-        $response[$key] = $value;
-      }
-    } else {
-      foreach ($validatedData as $item) {
-        if (in_array(null, $item, true)) {
-          $response[] = null;
-        } else {
-          $response[] = $this->createDept([
-            'item_id' => $item['item_id'],
-            'name' => $item['name'],
-          ]);
-        }
-      }
-
-      $nulledItems = array_filter(array_values($response), fn($item) => $item === null);
-      if (count($nulledItems) === count($validatedData)) {
-        foreach ([
-          'success' => false,
-          'message' => Constants::VALUES_ERROR_MSG,
-        ] as $key => $value) {
-          $response[$key] = $value;
-        }
-      } else {
-        $response['success'] = true;
-      }
-    }
-
-    $responseCode = $response['success'] ? 201 : 400;
-
-    return jsonx($response, [], $responseCode);
+    return $this->handleData(['error_values' => Constants::VALUES_ERROR_MSG]);
   }
 }
