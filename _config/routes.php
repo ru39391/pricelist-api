@@ -7,7 +7,7 @@ $router->get('api/pages', Zoomx\Controllers\Api\Page\GetController::class);
 
 $router->get('api/depts', Zoomx\Controllers\Api\Department\GetController::class);
 $router->post('api/depts', Zoomx\Controllers\Api\Department\CreateController::class);
-//$router->put('api/depts/{item_id}', Zoomx\Controllers\Api\Department\UpdateController::class);
+$router->put('api/depts', Zoomx\Controllers\Api\Department\UpdateController::class);
 //$router->delete('api/depts/{item_id}', Zoomx\Controllers\Api\Department\DeleteController::class);
 
 $router->get('api/subdepts', Zoomx\Controllers\Api\Subdepartment\GetController::class);

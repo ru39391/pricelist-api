@@ -4,20 +4,11 @@ namespace Zoomx\Controllers\Api\Department;
 
 use Zoomx\Controllers\Constants;
 use Zoomx\Controllers\Api\AuthController;
+use Zoomx\Controllers\Api\Department\DeptsTrait;
 
 class CreateController extends AuthController
 {
-  private function validateData($value)
-  {
-    if (is_array($value) && count($value) > 0) {
-      list($item_id, $name) = [$value['item_id'], trim($value['name'])];
-      return [
-        'item_id' => (empty($item_id) || !is_numeric($item_id) || $item_id <= 0) ? null : (int)$item_id,
-        'name' => (empty($name) || mb_strlen($name) > 255) ? null : $name,
-      ];
-    }
-    return null;
-  }
+  use DeptsTrait;
 
   private function createDept($data)
   {
@@ -31,7 +22,7 @@ class CreateController extends AuthController
   public function index()
   {
     $response = [];
-    $data = json_decode(file_get_contents('php://input'), true);
+    $data = $this->getData();
     $validatedData = array_map(fn($item) => $this->validateData($item), $data);
 
     if (in_array(null, $validatedData, true)) {
