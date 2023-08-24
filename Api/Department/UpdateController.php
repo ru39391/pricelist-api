@@ -4,16 +4,17 @@ namespace Zoomx\Controllers\Api\Department;
 
 use Zoomx\Controllers\Constants;
 use Zoomx\Controllers\Api\Department\BaseDeptController;
+use Zoomx\Controllers\Api\Department\DeptsTrait;
 
 class UpdateController extends BaseDeptController
 {
+  use DeptsTrait;
+
   private function updateItem($data)
   {
-    $response = zoomx('modx')->getObject(\pricelistDept::class, [
-      'item_id' => $data['item_id']
-    ]);
+    $response = $this->getItem('item_id');
 
-    if ($response !== null) {
+    if ((bool)$response) {
       $response->set('name', $data['name']);
       $response->save();
       zoomx('modx')->cacheManager->clearCache();

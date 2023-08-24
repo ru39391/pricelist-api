@@ -24,7 +24,7 @@ class BaseDeptController extends AuthController
       }
     } else {
       foreach ($validatedData as $item) {
-        $response[] = $item[$dateKey] ? $this->handleItem($item) : $item;
+        $response[] = $item[$dateKey] ? $this->handleItem($item, $dateKey) : $item;
       }
 
       $handledItems = array_filter($response, fn($item) => is_array($item));

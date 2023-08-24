@@ -4,6 +4,13 @@ namespace Zoomx\Controllers\Api\Department;
 
 trait DeptsTrait
 {
+  public function getItem($key, $value)
+  {
+    return zoomx('modx')->getObject(\pricelistDept::class, [
+      $key => $value
+    ]);
+  }
+
   public function getData()
   {
     return json_decode(file_get_contents('php://input'), true);
