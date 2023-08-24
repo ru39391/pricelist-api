@@ -23,6 +23,11 @@ class CreateController extends BaseDeptController
 
   public function index()
   {
-    return $this->handleData(['error_values' => Constants::VALUES_ERROR_MSG]);
+    $errors[Constants::VALUES_ERROR_KEY] = Constants::VALUES_ERROR_MSG;
+    return $this->handleData(
+      'createdon',
+      ['item_id', 'name'],
+      $errors
+    );
   }
 }

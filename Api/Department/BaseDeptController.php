@@ -10,11 +10,10 @@ class BaseDeptController extends AuthController
 {
   use DeptsTrait;
 
-  protected function handleData($errors)
+  protected function handleData($dateKey, $keys, $errors)
   {
     $response = [];
-    $data = $this->getData();
-    $validatedData = array_map(fn($item) => $this->validateData($item), $data);
+    $validatedData = array_map(fn($item) => $this->validateData($item), $this->getData());
 
     if (in_array(null, $validatedData, true)) {
       foreach ([
@@ -25,21 +24,18 @@ class BaseDeptController extends AuthController
       }
     } else {
       foreach ($validatedData as $item) {
-        if (in_array(null, $item, true)) {
-          $response[] = null;
-        } else {
-          $response[] = $this->handleItem([
-            'item_id' => $item['item_id'],
-            'name' => $item['name'],
-          ]);
-        }
+        $handledData = array_combine($keys, array_map(fn($key) => $item[$key], $keys));
+        $handledData[$dateKey] = $item[Constants::BOOL_VALID_KEY] ? date('Y-m-d H:i:s') : null;
+        $response[] = $item[Constants::BOOL_VALID_KEY] ? $this->handleItem($handledData) : $handledData;
       }
 
-      $nulledItems = array_filter(array_values($response), fn($item) => $item === null);
+      $handledItems = array_filter($response, fn($item) => is_array($item));
+      $itemDates = array_map(fn($item) => $item[$dateKey], $handledItems);
+      $nulledItems = array_filter($itemDates, fn($item) => $item === null);
       if (count($nulledItems) === count($validatedData)) {
         foreach ([
           'success' => false,
-          'message' => $errors['error_values'],
+          'message' => $errors[Constants::VALUES_ERROR_KEY],
         ] as $key => $value) {
           $response[$key] = $value;
         }

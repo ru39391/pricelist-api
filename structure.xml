@@ -40,6 +40,9 @@
       null="false" default="" />
     <field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
 
+    <field key="createdon" dbtype="datetime" phptype="datetime" null="false" />
+    <field key="updatedon" dbtype="datetime" phptype="datetime" null="true" />
+
     <composite alias="Items" class="pricelistItem" local="item_id" foreign="dept" cardinality="many"
       owner="local" />
   </object>

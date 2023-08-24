@@ -9,13 +9,15 @@ trait DeptsTrait
     return json_decode(file_get_contents('php://input'), true);
   }
 
-  public function validateData($value)
+  public function validateData($item)
   {
-    if (is_array($value) && count($value) > 0) {
-      list($item_id, $name) = [$value['item_id'], trim($value['name'])];
+    if (is_array($item) && count($item) > 0) {
+      list($id, $name) = array_values($item);
+      list($isIdValid, $idNameValid) = [(!empty($id) && is_numeric($id) && $id >= 0), (!empty($name) && is_string($name) && mb_strlen($name) < 255)];
       return [
-        'item_id' => (empty($item_id) || !is_numeric($item_id) || $item_id <= 0) ? null : (int)$item_id,
-        'name' => (empty($name) || mb_strlen($name) > 255) ? null : $name,
+        'item_id' => $isIdValid ? (int)$id : $id,
+        'name' => $idNameValid ? trim($name) : $name,
+        'isValid' => $isIdValid && $idNameValid
       ];
     }
     return null;
