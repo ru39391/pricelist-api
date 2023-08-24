@@ -9,7 +9,7 @@ trait DeptsTrait
     return json_decode(file_get_contents('php://input'), true);
   }
 
-  public function validateData($item)
+  public function validateData($item, $dateKey)
   {
     if (is_array($item) && count($item) > 0) {
       list($id, $name) = array_values($item);
@@ -17,7 +17,7 @@ trait DeptsTrait
       return [
         'item_id' => $isIdValid ? (int)$id : $id,
         'name' => $idNameValid ? trim($name) : $name,
-        'isValid' => $isIdValid && $idNameValid
+        $dateKey => $isIdValid && $idNameValid ? date('Y-m-d H:i:s') : null
       ];
     }
     return null;

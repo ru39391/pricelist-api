@@ -10,10 +10,10 @@ class BaseDeptController extends AuthController
 {
   use DeptsTrait;
 
-  protected function handleData($dateKey, $keys, $errors)
+  protected function handleData($dateKey, $errors)
   {
     $response = [];
-    $validatedData = array_map(fn($item) => $this->validateData($item), $this->getData());
+    $validatedData = array_map(fn($item) => $this->validateData($item, $dateKey), $this->getData());
 
     if (in_array(null, $validatedData, true)) {
       foreach ([
@@ -24,9 +24,7 @@ class BaseDeptController extends AuthController
       }
     } else {
       foreach ($validatedData as $item) {
-        $handledData = array_combine($keys, array_map(fn($key) => $item[$key], $keys));
-        $handledData[$dateKey] = $item[Constants::BOOL_VALID_KEY] ? date('Y-m-d H:i:s') : null;
-        $response[] = $item[Constants::BOOL_VALID_KEY] ? $this->handleItem($handledData) : $handledData;
+        $response[] = $item[$dateKey] ? $this->handleItem($item) : $item;
       }
 
       $handledItems = array_filter($response, fn($item) => is_array($item));
