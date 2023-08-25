@@ -10,27 +10,35 @@ class UpdateController extends BaseDeptController
 {
   use DeptsTrait;
 
-  private function updateItem($data)
+  private function updateItem($data, $dateKey)
   {
-    $response = $this->getItem('item_id');
-
+    $output = [];
+    $response = $this->getItem($data);
     if ((bool)$response) {
-      $response->set('name', $data['name']);
+      foreach (array_filter(array_keys($data), fn($key) => $key !== 'item_id') as $item) {
+        $response->set($item, $data[$item]);
+      }
       $response->save();
       zoomx('modx')->cacheManager->clearCache();
-
-      return $response->toArray();
+      $output = $response->toArray();
+    } else {
+      $output = $data;
+      $output[$dateKey] = $response;
     }
-    return null;
+
+    return $output;
   }
 
-  public function handleItem($data)
+  public function handleItem($data, $dateKey)
   {
-    return $this->updateItem($data);
+    return $this->updateItem($data, $dateKey);
   }
 
   public function index()
   {
-    return $this->handleData(['error_values' => Constants::VALUES_UPDATE_ERROR_MSG]);
+    return $this->handleData(
+      'updatedon',
+      [Constants::VALUES_ERROR_KEY => Constants::VALUES_UPDATE_ERROR_MSG]
+    );
   }
 }
