@@ -27,6 +27,9 @@
     <field key="index" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
       null="false" default="0" />
 
+    <field key="createdon" dbtype="datetime" phptype="datetime" null="false" />
+    <field key="updatedon" dbtype="datetime" phptype="datetime" null="true" />
+
     <aggregate alias="Dept" class="pricelistDept" local="dept" foreign="item_id" cardinality="one"
       owner="foreign" />
     <aggregate alias="Subdept" class="pricelistSubdept" local="subdept" foreign="item_id"
@@ -55,6 +58,9 @@
     <field key="dept" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
       null="false" default="" />
 
+    <field key="createdon" dbtype="datetime" phptype="datetime" null="false" />
+    <field key="updatedon" dbtype="datetime" phptype="datetime" null="true" />
+
     <composite alias="Items" class="pricelistItem" local="item_id" foreign="subdept"
       cardinality="many" owner="local" />
   </object>
@@ -68,6 +74,9 @@
       null="false" default="" />
     <field key="subdept" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
       null="false" default="" />
+
+    <field key="createdon" dbtype="datetime" phptype="datetime" null="false" />
+    <field key="updatedon" dbtype="datetime" phptype="datetime" null="true" />
 
     <composite alias="Items" class="pricelistItem" local="item_id" foreign="subdept"
       cardinality="many" owner="local" />

@@ -42,7 +42,7 @@ class BaseDeptController extends AuthController
       }
     }
 
-    $responseCode = $response['success'] ? 201 : 400;
+    $responseCode = $response['success'] ? 200 : 400;
 
     return jsonx($response, [], $responseCode);
   }
