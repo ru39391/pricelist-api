@@ -5,11 +5,25 @@
 $router->get('services', Zoomx\Controllers\ServicesController::class);
 $router->get('api/pages', Zoomx\Controllers\Api\Page\GetController::class);
 
-$router->get('api/depts', Zoomx\Controllers\Api\Department\GetController::class);
-$router->post('api/depts', Zoomx\Controllers\Api\Department\CreateController::class);
-$router->put('api/depts', Zoomx\Controllers\Api\Department\UpdateController::class);
-$router->delete('api/depts', Zoomx\Controllers\Api\Department\DeleteController::class);
+$routes = [
+  'pricelist' => 'Pricelist',
+  'depts' => 'Department',
+  'subdepts' => 'Subdepartment',
+  'groups' => 'Group'
+];
 
-$router->get('api/subdepts', Zoomx\Controllers\Api\Subdepartment\GetController::class);
-$router->get('api/svgroups', Zoomx\Controllers\Api\Group\GetController::class);
-$router->get('api/pricelist', Zoomx\Controllers\Api\Pricelist\GetController::class);
+foreach($routes as $key => $value) {
+  $router->get("api/{$key}", "Zoomx\\Controllers\\Api\\$value\\GetController");
+}
+
+foreach($routes as $key => $value) {
+  $router->post("api/{$key}", "Zoomx\\Controllers\\Api\\$value\\CreateController");
+}
+
+foreach($routes as $key => $value) {
+  $router->put("api/{$key}", "Zoomx\\Controllers\\Api\\$value\\UpdateController");
+}
+
+foreach($routes as $key => $value) {
+  $router->delete("api/{$key}", "Zoomx\\Controllers\\Api\\$value\\DeleteController");
+}
