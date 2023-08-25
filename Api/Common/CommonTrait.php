@@ -14,9 +14,9 @@ trait CommonTrait
     return !empty($value) && is_string($value) && mb_strlen($value) < 255;
   }
 
-  public function getItem($data)
+  public function getItem($class, $data)
   {
-    return zoomx('modx')->getObject(\pricelistDept::class, [
+    return zoomx('modx')->getObject($class, [
       'item_id' => $data['item_id']
     ]);
   }

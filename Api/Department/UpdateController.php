@@ -8,6 +8,6 @@ class UpdateController extends CommonUpdateController
 {
   public function index()
   {
-    return $this->updateData();
+    return $this->updateData(\pricelistDept::class);
   }
 }

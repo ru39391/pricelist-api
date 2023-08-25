@@ -8,6 +8,6 @@ class CreateController extends CommonCreateController
 {
   public function index()
   {
-    return $this->createData();
+    return $this->createData(\pricelistDept::class);
   }
 }

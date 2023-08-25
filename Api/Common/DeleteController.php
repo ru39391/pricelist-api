@@ -10,10 +10,10 @@ class DeleteController extends CommonController
 {
   use CommonTrait;
 
-  private function deleteItem($data, $dateKey)
+  private function deleteItem($data, $dateKey, $class)
   {
     $output = [];
-    $item = $this->getItem($data);
+    $item = $this->getItem($class, $data);
     if ((bool)$item) {
       $output = $item->remove() ? $data : $item->toArray();
       zoomx('modx')->cacheManager->clearCache();
@@ -25,14 +25,15 @@ class DeleteController extends CommonController
     return $output;
   }
 
-  public function handleItem($data, $dateKey)
+  public function handleItem($data, $dateKey, $class)
   {
-    return $this->deleteItem($data, $dateKey);
+    return $this->deleteItem($data, $dateKey, $class);
   }
 
-  protected function deleteData()
+  protected function deleteData($class)
   {
     return $this->handleData(
+      $class,
       'updatedon',
       [Constants::VALUES_ERROR_KEY => Constants::VALUES_DELETE_ERROR_MSG]
     );

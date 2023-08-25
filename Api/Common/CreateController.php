@@ -10,15 +10,15 @@ class CreateController extends CommonController
 {
   use CommonTrait;
 
-  private function createItem($data, $dateKey)
+  private function createItem($data, $dateKey, $class)
   {
     $output = [];
-    $item = $this->getItem($data);
+    $item = $this->getItem($class, $data);
     if((bool)$item) {
       $output = $item->toArray();
       $output[$dateKey] = null;
     } else {
-      $response = zoomx('modx')->newObject(\pricelistDept::class, $data);
+      $response = zoomx('modx')->newObject($class, $data);
       $response->save();
       zoomx('modx')->cacheManager->clearCache();
       $output = $response->toArray();
@@ -27,14 +27,15 @@ class CreateController extends CommonController
     return $output;
   }
 
-  public function handleItem($data, $dateKey)
+  public function handleItem($data, $dateKey, $class)
   {
-    return $this->createItem($data, $dateKey);
+    return $this->createItem($data, $dateKey, $class);
   }
 
-  protected function createData()
+  protected function createData($class)
   {
     return $this->handleData(
+      $class,
       'createdon',
       [Constants::VALUES_ERROR_KEY => Constants::VALUES_CREATE_ERROR_MSG]
     );

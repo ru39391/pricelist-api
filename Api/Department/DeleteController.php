@@ -8,6 +8,6 @@ class DeleteController extends CommonDeleteController
 {
   public function index()
   {
-    return $this->deleteData();
+    return $this->deleteData(\pricelistDept::class);
   }
 }

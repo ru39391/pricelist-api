@@ -10,7 +10,7 @@ class CommonController extends AuthController
 {
   use CommonTrait;
 
-  protected function handleData($dateKey, $errors)
+  protected function handleData($class, $dateKey, $errors)
   {
     $response = [];
     $validatedData = array_map(fn($item) => $this->validateData($item, $dateKey), $this->getData());
@@ -24,7 +24,7 @@ class CommonController extends AuthController
       }
     } else {
       foreach ($validatedData as $item) {
-        $response[] = $item[$dateKey] ? $this->handleItem($item, $dateKey) : $item;
+        $response[] = $item[$dateKey] ? $this->handleItem($item, $dateKey, $class) : $item;
       }
 
       $handledItems = array_filter($response, fn($item) => is_array($item));
