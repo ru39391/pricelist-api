@@ -36,7 +36,7 @@ class CreateController extends BaseDeptController
   {
     return $this->handleData(
       'createdon',
-      [Constants::VALUES_ERROR_KEY => Constants::VALUES_ERROR_MSG]
+      [Constants::VALUES_ERROR_KEY => Constants::VALUES_CREATE_ERROR_MSG]
     );
   }
 }

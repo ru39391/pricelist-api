@@ -6,21 +6,17 @@ use Zoomx\Controllers\Constants;
 use Zoomx\Controllers\Api\Department\BaseDeptController;
 use Zoomx\Controllers\Api\Department\DeptsTrait;
 
-class UpdateController extends BaseDeptController
+class DeleteController extends BaseDeptController
 {
   use DeptsTrait;
 
-  private function updateItem($data, $dateKey)
+  private function deleteItem($data, $dateKey)
   {
     $output = [];
     $item = $this->getItem($data);
     if ((bool)$item) {
-      foreach (array_filter(array_keys($data), fn($key) => $key !== 'item_id') as $key) {
-        $item->set($key, $data[$key]);
-      }
-      $item->save();
+      $output = $item->remove() ? $data : $item->toArray();
       zoomx('modx')->cacheManager->clearCache();
-      $output = $item->toArray();
     } else {
       $output = $data;
       $output[$dateKey] = $item;
@@ -31,14 +27,14 @@ class UpdateController extends BaseDeptController
 
   public function handleItem($data, $dateKey)
   {
-    return $this->updateItem($data, $dateKey);
+    return $this->deleteItem($data, $dateKey);
   }
 
   public function index()
   {
     return $this->handleData(
       'updatedon',
-      [Constants::VALUES_ERROR_KEY => Constants::VALUES_UPDATE_ERROR_MSG]
+      [Constants::VALUES_ERROR_KEY => Constants::VALUES_DELETE_ERROR_MSG]
     );
   }
 }
