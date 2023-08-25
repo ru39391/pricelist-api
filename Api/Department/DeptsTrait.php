@@ -4,10 +4,20 @@ namespace Zoomx\Controllers\Api\Department;
 
 trait DeptsTrait
 {
-  public function getItem($key, $value)
+  private function isNumValid($value)
+  {
+    return !empty($value) && is_numeric($value) && $value >= 0;
+  }
+
+  private function isStrValid($value)
+  {
+    return !empty($value) && is_string($value) && mb_strlen($value) < 255;
+  }
+
+  public function getItem($data)
   {
     return zoomx('modx')->getObject(\pricelistDept::class, [
-      $key => $value
+      'item_id' => $data['item_id']
     ]);
   }
 
@@ -19,13 +29,27 @@ trait DeptsTrait
   public function validateData($item, $dateKey)
   {
     if (is_array($item) && count($item) > 0) {
-      list($id, $name) = array_values($item);
-      list($isIdValid, $idNameValid) = [(!empty($id) && is_numeric($id) && $id >= 0), (!empty($name) && is_string($name) && mb_strlen($name) < 255)];
-      return [
-        'item_id' => $isIdValid ? (int)$id : $id,
-        'name' => $idNameValid ? trim($name) : $name,
-        $dateKey => $isIdValid && $idNameValid ? date('Y-m-d H:i:s') : null
-      ];
+      $validatedData = [];
+
+      foreach ($item as $key => $value) {
+        switch ($key) {
+          case 'name':
+            $validatedData[$key] = [
+              $key => $this->isStrValid($value) ? trim($value) : $value,
+              'isValid' => $this->isStrValid($value)
+            ];
+            break;
+          default:
+            $validatedData[$key] = [
+              $key => $this->isNumValid($value) ? (int)$value : $value,
+              'isValid' => $this->isNumValid($value)
+            ];
+            break;
+        }
+      }
+
+      $validatedData[$dateKey] = in_array(false, array_map(fn($item) => $item['isValid'], $validatedData), true) ? null : date('Y-m-d H:i:s');
+      return array_merge(...array_map(fn($key, $value) => [$key => is_array($value) ?  $value[$key] : $value], array_keys($validatedData), $validatedData));
     }
     return null;
   }

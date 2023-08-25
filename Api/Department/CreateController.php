@@ -12,17 +12,19 @@ class CreateController extends BaseDeptController
 
   private function createItem($data, $dateKey)
   {
-    $item = $this->getItem('item_id', $data['item_id']);
+    $output = [];
+    $item = $this->getItem($data);
     if((bool)$item) {
-      $response = $item->toArray();
-      $response[$dateKey] = null;
+      $output = $item->toArray();
+      $output[$dateKey] = null;
     } else {
       $response = zoomx('modx')->newObject(\pricelistDept::class, $data);
       $response->save();
       zoomx('modx')->cacheManager->clearCache();
+      $output = $response->toArray();
     }
 
-    return (bool)$item ? $response : $response->toArray();
+    return $output;
   }
 
   public function handleItem($data, $dateKey)
