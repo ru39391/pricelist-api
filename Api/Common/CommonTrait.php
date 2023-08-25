@@ -1,8 +1,8 @@
 <?php
 
-namespace Zoomx\Controllers\Api\Department;
+namespace Zoomx\Controllers\Api\Common;
 
-trait DeptsTrait
+trait CommonTrait
 {
   private function isNumValid($value)
   {

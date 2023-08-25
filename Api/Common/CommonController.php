@@ -1,14 +1,14 @@
 <?php
 
-namespace Zoomx\Controllers\Api\Department;
+namespace Zoomx\Controllers\Api\Common;
 
 use Zoomx\Controllers\Constants;
 use Zoomx\Controllers\Api\AuthController;
-use Zoomx\Controllers\Api\Department\DeptsTrait;
+use Zoomx\Controllers\Api\Common\CommonTrait;
 
-class BaseDeptController extends AuthController
+class CommonController extends AuthController
 {
-  use DeptsTrait;
+  use CommonTrait;
 
   protected function handleData($dateKey, $errors)
   {
