@@ -2,6 +2,8 @@
 
 namespace Zoomx\Controllers\Api\Common;
 
+use Zoomx\Controllers\Constants;
+
 trait CommonTrait
 {
   private function isNumValid($value)
@@ -17,7 +19,7 @@ trait CommonTrait
   public function getItem($class, $data)
   {
     return zoomx('modx')->getObject($class, [
-      'item_id' => $data['item_id']
+      Constants::ID_KEY => $data[Constants::ID_KEY]
     ]);
   }
 
@@ -33,22 +35,22 @@ trait CommonTrait
 
       foreach ($item as $key => $value) {
         switch ($key) {
-          case 'name':
+          case Constants::NAME_KEY:
             $validatedData[$key] = [
               $key => $this->isStrValid($value) ? trim($value) : $value,
-              'isValid' => $this->isStrValid($value)
+              Constants::IS_VALID_KEY => $this->isStrValid($value)
             ];
             break;
           default:
             $validatedData[$key] = [
               $key => $this->isNumValid($value) ? (int)$value : $value,
-              'isValid' => $this->isNumValid($value)
+              Constants::IS_VALID_KEY => $this->isNumValid($value)
             ];
             break;
         }
       }
 
-      $validatedData[$dateKey] = in_array(false, array_map(fn($item) => $item['isValid'], $validatedData), true) ? null : date('Y-m-d H:i:s');
+      $validatedData[$dateKey] = in_array(false, array_map(fn($item) => $item[Constants::IS_VALID_KEY], $validatedData), true) ? null : date('Y-m-d H:i:s');
       return array_merge(...array_map(fn($key, $value) => [$key => is_array($value) ?  $value[$key] : $value], array_keys($validatedData), $validatedData));
     }
     return null;

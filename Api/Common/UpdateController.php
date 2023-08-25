@@ -15,7 +15,7 @@ class UpdateController extends CommonController
     $output = [];
     $item = $this->getItem($class, $data);
     if ((bool)$item) {
-      foreach (array_filter(array_keys($data), fn($key) => $key !== 'item_id') as $key) {
+      foreach (array_filter(array_keys($data), fn($key) => $key !== Constants::ID_KEY) as $key) {
         $item->set($key, $data[$key]);
       }
       $item->save();
@@ -38,7 +38,7 @@ class UpdateController extends CommonController
   {
     return $this->handleData(
       $class,
-      'updatedon',
+      Constants::UPDATEDON_KEY,
       [Constants::VALUES_ERROR_KEY => Constants::VALUES_UPDATE_ERROR_MSG]
     );
   }

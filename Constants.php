@@ -4,6 +4,12 @@ namespace Zoomx\Controllers;
 
 class Constants
 {
+  const ID_KEY = 'item_id';
+  const NAME_KEY = 'name';
+  const IS_VALID_KEY = 'isValid';
+  const UPDATEDON_KEY = 'updatedon';
+  const CREATEDON_KEY = 'createdon';
+
   const VALUES_ERROR_KEY = 'error_values';
 
   const DATA_ERROR_MSG = 'Некорректный формат передаваемых данных';
