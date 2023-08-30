@@ -7,6 +7,7 @@ class Constants
   const ID_KEY = 'item_id';
   const NAME_KEY = 'name';
   const DEPT_KEY = 'dept';
+  const SUBDEPT_KEY = 'subdept';
   const IS_VALID_KEY = 'isValid';
   const UPDATEDON_KEY = 'updatedon';
   const CREATEDON_KEY = 'createdon';

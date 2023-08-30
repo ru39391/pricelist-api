@@ -35,7 +35,7 @@ class DeleteController extends CommonController
     return $this->handleData(
       $class,
       Constants::UPDATEDON_KEY,
-      [Constants::VALUES_ERROR_KEY => Constants::VALUES_DELETE_ERROR_MSG]
+      Constants::VALUES_DELETE_ERROR_MSG
     );
   }
 }

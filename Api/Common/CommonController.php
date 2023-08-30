@@ -30,7 +30,7 @@ class CommonController extends AuthController
     return jsonx($response, [], $responseCode);
   }
 
-  protected function handleData($class, $dateKey, $errors)
+  protected function handleData($class, $dateKey, $error)
   {
     $response = [];
     $validatedData = array_map(fn($item) => $this->validateData($item, $dateKey), $this->getInputData());
@@ -53,7 +53,7 @@ class CommonController extends AuthController
       if (count($nulledItems) === count($validatedData)) {
         foreach ([
           'success' => false,
-          'message' => $errors[Constants::VALUES_ERROR_KEY],
+          'message' => $error,
         ] as $key => $value) {
           $response[$key] = $value;
         }

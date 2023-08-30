@@ -37,7 +37,7 @@ class CreateController extends CommonController
     return $this->handleData(
       $class,
       Constants::CREATEDON_KEY,
-      [Constants::VALUES_ERROR_KEY => Constants::VALUES_CREATE_ERROR_MSG]
+      Constants::VALUES_CREATE_ERROR_MSG
     );
   }
 }
