@@ -10,10 +10,30 @@ class CommonController extends AuthController
 {
   use CommonTrait;
 
+  protected function getItems($class, $children = [], $dataKey = '')
+  {
+    $response = [];
+    $items = zoomx('modx')->getCollection($class);
+    foreach($items as $item) {
+      $data = $item->toArray();
+      if(count($children) > 0) {
+        foreach($this->getChildren($children, $dataKey, $item->item_id) as $key => $value) {
+          $data[$key] = $value;
+        }
+      }
+
+      $response[] = $data;
+    }
+
+    $responseCode = count($items) > 0 ? 200 : 400;
+
+    return jsonx($response, [], $responseCode);
+  }
+
   protected function handleData($class, $dateKey, $errors)
   {
     $response = [];
-    $validatedData = array_map(fn($item) => $this->validateData($item, $dateKey), $this->getData());
+    $validatedData = array_map(fn($item) => $this->validateData($item, $dateKey), $this->getInputData());
 
     if (in_array(null, $validatedData, true)) {
       foreach ([

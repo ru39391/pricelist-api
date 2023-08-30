@@ -12,18 +12,15 @@ $routes = [
   'groups' => 'Group'
 ];
 
-foreach($routes as $key => $value) {
-  $router->get("api/{$key}", "Zoomx\\Controllers\\Api\\$value\\GetController");
-}
+$methods = [
+  'get' => 'GetController',
+  'post' => 'CreateController',
+  'put' => 'UpdateController',
+  'delete' => 'DeleteController'
+];
 
-foreach($routes as $key => $value) {
-  $router->post("api/{$key}", "Zoomx\\Controllers\\Api\\$value\\CreateController");
-}
-
-foreach($routes as $key => $value) {
-  $router->put("api/{$key}", "Zoomx\\Controllers\\Api\\$value\\UpdateController");
-}
-
-foreach($routes as $key => $value) {
-  $router->delete("api/{$key}", "Zoomx\\Controllers\\Api\\$value\\DeleteController");
+foreach ($routes as $key => $value) {
+  foreach ($methods as $method => $controller) {
+    $router->{$method}("api/{$key}", "Zoomx\\Controllers\\Api\\$value\\$controller");
+  }
 }

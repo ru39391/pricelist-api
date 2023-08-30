@@ -16,6 +16,10 @@ trait CommonTrait
     return !empty($value) && is_string($value) && mb_strlen($value) < 255;
   }
 
+  private function handleArr($arr) {
+    return array_map(fn($item) => $item->toArray(), $arr);
+  }
+
   public function getItem($class, $data)
   {
     return zoomx('modx')->getObject($class, [
@@ -23,7 +27,12 @@ trait CommonTrait
     ]);
   }
 
-  public function getData()
+  public function getChildren($children, $dataKey, $value)
+  {
+    return array_map(fn($item) => $this->handleArr(zoomx('modx')->getCollection($item, [$dataKey => $value])), $children);
+  }
+
+  public function getInputData()
   {
     return json_decode(file_get_contents('php://input'), true);
   }
