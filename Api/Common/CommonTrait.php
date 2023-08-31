@@ -20,6 +20,17 @@ trait CommonTrait
     return array_map(fn($item) => $item->toArray(), $arr);
   }
 
+  private function validateKeys($arr, $keys) {
+    /*
+    foreach ($keys as $key) {
+        if (!isset($arr[$key])) {
+            return false;
+        }
+    }
+    */
+    return true;
+  }
+
   public function getItem($class, $data)
   {
     return zoomx('modx')->getObject($class, [
@@ -37,9 +48,9 @@ trait CommonTrait
     return json_decode(file_get_contents('php://input'), true);
   }
 
-  public function validateData($item, $dateKey)
+  public function validateData($item, $dateKey, $keys)
   {
-    if (is_array($item) && count($item) > 0) {
+    if (is_array($item) && count($item) > 0 && $this->validateKeys($item, $keys)) {
       $validatedData = [];
 
       foreach ($item as $key => $value) {
