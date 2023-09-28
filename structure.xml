@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<model package="pricelist" baseClass="xPDOObject" platform="mysql" defaultEngine="InnoDB"
+  version="1.1">
+  <object class="pricelistItem" table="pricelist_items" extends="xPDOSimpleObject">
+    <field key="item_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
+      null="false" default="" />
+    <field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+    <field key="price" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
+      null="false" default="" />
+
+    <field key="dept" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
+      null="false" default="" />
+    <field key="subdept" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
+      null="false" default="" />
+    <field key="group" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
+      null="false" default="" />
+
+    <field key="isComplexItem" dbtype="tinyint" precision="1" attributes="unsigned"
+      phptype="integer" null="false" default="0" />
+    <field key="isComplex" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer"
+      null="false" default="0" />
+    <field key="complex" dbtype="text" null="false" default="" />
+
+    <field key="isVisible" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer"
+      null="false" default="1" />
+    <field key="index" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
+      null="false" default="0" />
+
+    <field key="createdon" dbtype="datetime" phptype="datetime" null="false" />
+    <field key="updatedon" dbtype="datetime" phptype="datetime" null="true" />
+
+    <aggregate alias="Dept" class="pricelistDept" local="dept" foreign="item_id" cardinality="one"
+      owner="foreign" />
+    <aggregate alias="Subdept" class="pricelistSubdept" local="subdept" foreign="item_id"
+      cardinality="one" owner="foreign" />
+    <aggregate alias="Group" class="pricelistGroup" local="group" foreign="item_id"
+      cardinality="one" owner="foreign" />
+  </object>
+
+  <object class="pricelistDept" table="pricelist_depts" extends="xPDOSimpleObject">
+    <field key="item_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
+      null="false" default="" />
+    <field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+
+    <field key="createdon" dbtype="datetime" phptype="datetime" null="false" />
+    <field key="updatedon" dbtype="datetime" phptype="datetime" null="true" />
+
+    <composite alias="Items" class="pricelistItem" local="item_id" foreign="dept" cardinality="many"
+      owner="local" />
+  </object>
+
+  <object class="pricelistSubdept" table="pricelist_subdepts" extends="xPDOSimpleObject">
+    <field key="item_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
+      null="false" default="" />
+    <field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+
+    <field key="dept" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
+      null="false" default="" />
+
+    <field key="createdon" dbtype="datetime" phptype="datetime" null="false" />
+    <field key="updatedon" dbtype="datetime" phptype="datetime" null="true" />
+
+    <composite alias="Items" class="pricelistItem" local="item_id" foreign="subdept"
+      cardinality="many" owner="local" />
+  </object>
+
+  <object class="pricelistGroup" table="pricelist_groups" extends="xPDOSimpleObject">
+    <field key="item_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
+      null="false" default="" />
+    <field key="name" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+
+    <field key="dept" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
+      null="false" default="" />
+    <field key="subdept" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
+      null="false" default="" />
+
+    <field key="createdon" dbtype="datetime" phptype="datetime" null="false" />
+    <field key="updatedon" dbtype="datetime" phptype="datetime" null="true" />
+
+    <composite alias="Items" class="pricelistItem" local="item_id" foreign="subdept"
+      cardinality="many" owner="local" />
+  </object>
+</model>

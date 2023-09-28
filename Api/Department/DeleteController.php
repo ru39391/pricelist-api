@@ -1,0 +1,13 @@
+<?php
+
+namespace Zoomx\Controllers\Api\Department;
+
+use Zoomx\Controllers\Api\Common\DeleteController as CommonDeleteController;
+
+class DeleteController extends CommonDeleteController
+{
+  public function index()
+  {
+    return $this->deleteData(\pricelistDept::class);
+  }
+}
