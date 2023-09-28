@@ -32,12 +32,13 @@ class CreateController extends CommonController
     return $this->createItem($data, $dateKey, $class);
   }
 
-  protected function createData($class)
+  protected function createData($class, $keys)
   {
     return $this->handleData(
       $class,
       Constants::CREATEDON_KEY,
-      Constants::VALUES_CREATE_ERROR_MSG
+      Constants::VALUES_CREATE_ERROR_MSG,
+      $keys
     );
   }
 }

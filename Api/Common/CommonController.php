@@ -30,10 +30,10 @@ class CommonController extends AuthController
     return jsonx($response, [], $responseCode);
   }
 
-  protected function handleData($class, $dateKey, $error)
+  protected function handleData($class, $dateKey, $error, $keys = [])
   {
     $response = [];
-    $validatedData = array_map(fn($item) => $this->validateData($item, $dateKey), $this->getInputData());
+    $validatedData = array_map(fn($item) => $this->validateData($item, $dateKey, $keys), $this->getInputData());
 
     if (in_array(null, $validatedData, true)) {
       foreach ([
@@ -65,5 +65,6 @@ class CommonController extends AuthController
     $responseCode = $response['success'] ? 200 : 400;
 
     return jsonx($response, [], $responseCode);
+    //return jsonx($validatedData, [], 200);
   }
 }

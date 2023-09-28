@@ -20,15 +20,10 @@ trait CommonTrait
     return array_map(fn($item) => $item->toArray(), $arr);
   }
 
-  private function validateKeys($arr, $keys) {
-    /*
-    foreach ($keys as $key) {
-        if (!isset($arr[$key])) {
-            return false;
-        }
-    }
-    */
-    return true;
+  private function validateKeys($arr, $keys)
+  {
+    $validatedArr = array_map(fn($item) => in_array($item, array_keys($arr), true), $keys);
+    return array_reduce($validatedArr, fn($carry, $item) => $carry && $item, true);
   }
 
   public function getItem($class, $data)

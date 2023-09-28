@@ -8,12 +8,49 @@ class Constants
   const NAME_KEY = 'name';
   const DEPT_KEY = 'dept';
   const SUBDEPT_KEY = 'subdept';
+  const GROUP_KEY = 'group';
+  const PRICE_KEY = 'price';
   const IS_VALID_KEY = 'isValid';
   const UPDATEDON_KEY = 'updatedon';
   const CREATEDON_KEY = 'createdon';
 
+  const IS_COMPLEX_ITEM_KEY = 'isComplexItem';
+  const IS_COMPLEX_KEY = 'isComplex';
+  const COMPLEX_KEY = 'complex';
+  const IS_VISIBLE_KEY = 'isVisible';
+  const INDEX_KEY = 'index';
+
   const SUBDEPTS_PARAM_KEY = 'subdepts';
   const GROUPS_PARAM_KEY = 'groups';
+
+  const DEPT_KEYS = [
+    Constants::ID_KEY,
+    Constants::NAME_KEY
+  ];
+  const SUBDEPT_KEYS = [
+    Constants::ID_KEY,
+    Constants::NAME_KEY,
+    Constants::DEPT_KEY
+  ];
+  const GROUP_KEYS = [
+    Constants::ID_KEY,
+    Constants::NAME_KEY,
+    Constants::DEPT_KEY,
+    Constants::SUBDEPT_KEY
+  ];
+  const ITEM_KEYS = [
+    Constants::ID_KEY,
+    Constants::NAME_KEY,
+    Constants::PRICE_KEY,
+    Constants::DEPT_KEY,
+    Constants::SUBDEPT_KEY,
+    Constants::GROUP_KEY,
+    Constants::IS_COMPLEX_ITEM_KEY,
+    Constants::IS_COMPLEX_KEY,
+    Constants::COMPLEX_KEY,
+    Constants::IS_VISIBLE_KEY,
+    Constants::INDEX_KEY,
+  ];
 
   const VALUES_ERROR_KEY = 'error_values';
 
