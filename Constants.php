@@ -36,7 +36,8 @@ class Constants
     Constants::ID_KEY,
     Constants::NAME_KEY,
     Constants::DEPT_KEY,
-    Constants::SUBDEPT_KEY
+    Constants::SUBDEPT_KEY,
+    Constants::GROUP_KEY
   ];
   const ITEM_KEYS = [
     Constants::ID_KEY,
