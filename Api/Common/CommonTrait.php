@@ -47,7 +47,8 @@ trait CommonTrait
   {
     if (is_array($item) && count($item) > 0 && $this->validateKeys($item, $keys)) {
       $validatedData = [];
-
+      // TODO: дописать правила валидации https://skrinshoter.ru/sObnDbqCZV0
+      // group = 0 - не относится к группе, ни одна другая категория не равна нулю
       foreach ($item as $key => $value) {
         switch ($key) {
           case Constants::NAME_KEY:
@@ -66,7 +67,8 @@ trait CommonTrait
       }
 
       $validatedData[$dateKey] = in_array(false, array_map(fn($item) => $item[Constants::IS_VALID_KEY], $validatedData), true) ? null : date('Y-m-d H:i:s');
-      return array_merge(...array_map(fn($key, $value) => [$key => is_array($value) ?  $value[$key] : $value], array_keys($validatedData), $validatedData));
+      return $validatedData;
+      //return array_merge(...array_map(fn($key, $value) => [$key => is_array($value) ?  $value[$key] : $value], array_keys($validatedData), $validatedData));
     }
     return null;
   }
