@@ -6,14 +6,34 @@ use Zoomx\Controllers\Constants;
 
 trait CommonTrait
 {
+  private function isNumeric($value)
+  {
+    return is_numeric($value);
+  }
+
+  private function isBoolValid($value)
+  {
+    return $this->isNumeric($value) && ($value === 0 || $value === 1);
+  }
+
   private function isNumValid($value)
   {
-    return !empty($value) && is_numeric($value) && $value >= 0;
+    return $this->isNumeric($value) && $value >= 0;
   }
 
   private function isStrValid($value)
   {
     return !empty($value) && is_string($value) && mb_strlen($value) < 255;
+  }
+
+  private function isCategoryIdValid($value)
+  {
+    return !empty($value) ? $this->isNumValid($value) : true;
+  }
+
+  private function handleEmptyVal($value)
+  {
+    return empty($value) ? $value : (int)$value;
   }
 
   private function handleArr($arr) {
@@ -47,14 +67,42 @@ trait CommonTrait
   {
     if (is_array($item) && count($item) > 0 && $this->validateKeys($item, $keys)) {
       $validatedData = [];
-      // TODO: дописать правила валидации https://skrinshoter.ru/sObnDbqCZV0
-      // group = 0 - не относится к группе, ни одна другая категория не равна нулю
       foreach ($item as $key => $value) {
         switch ($key) {
           case Constants::NAME_KEY:
             $validatedData[$key] = [
               $key => $this->isStrValid($value) ? trim($value) : $value,
               Constants::IS_VALID_KEY => $this->isStrValid($value)
+            ];
+            break;
+          case Constants::COMPLEX_KEY:
+            $validatedData[$key] = [
+              $key => $this->isStrValid($value) ? trim($value) : $value,
+              Constants::IS_VALID_KEY => $this->isStrValid($value)
+            ];
+            break;
+          case Constants::IS_COMPLEX_KEY:
+            $validatedData[$key] = [
+              $key => $this->isBoolValid($value) ? (int)$value : $value,
+              Constants::IS_VALID_KEY => $this->isBoolValid($value)
+            ];
+            break;
+          case Constants::IS_COMPLEX_ITEM_KEY:
+            $validatedData[$key] = [
+              $key => $this->isBoolValid($value) ? (int)$value : $value,
+              Constants::IS_VALID_KEY => $this->isBoolValid($value)
+            ];
+            break;
+          case Constants::IS_VISIBLE_KEY:
+            $validatedData[$key] = [
+              $key => $this->isBoolValid($value) ? (int)$value : $value,
+              Constants::IS_VALID_KEY => $this->isBoolValid($value)
+            ];
+            break;
+          case Constants::GROUP_KEY:
+            $validatedData[$key] = [
+              $key => $this->isCategoryIdValid($value) ? $this->handleEmptyVal($value) : $value,
+              Constants::IS_VALID_KEY => $this->isCategoryIdValid($value)
             ];
             break;
           default:
