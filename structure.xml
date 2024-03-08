@@ -20,7 +20,7 @@
       phptype="integer" null="false" default="0" />
     <field key="isComplex" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer"
       null="false" default="0" />
-    <field key="complex" dbtype="text" null="false" default="" />
+    <field key="complex" dbtype="text" phptype="string" null="false" default="" />
 
     <field key="isVisible" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer"
       null="false" default="1" />

@@ -64,8 +64,7 @@ class CommonController extends AuthController
 
     $responseCode = $response['success'] ? 200 : 400;
 
-    $validatedData['dateKey'] = $keys;
-    //return jsonx($response, [], $responseCode);
-    return jsonx($validatedData, [], 200);
+    return jsonx($response, [], $responseCode);
+    //return jsonx($validatedData, [], 200);
   }
 }

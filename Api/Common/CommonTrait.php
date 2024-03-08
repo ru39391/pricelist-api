@@ -115,8 +115,7 @@ trait CommonTrait
       }
 
       $validatedData[$dateKey] = in_array(false, array_map(fn($item) => $item[Constants::IS_VALID_KEY], $validatedData), true) ? null : date('Y-m-d H:i:s');
-      return $validatedData;
-      //return array_merge(...array_map(fn($key, $value) => [$key => is_array($value) ?  $value[$key] : $value], array_keys($validatedData), $validatedData));
+      return array_merge(...array_map(fn($key, $value) => [$key => is_array($value) ?  $value[$key] : $value], array_keys($validatedData), $validatedData));
     }
     return null;
   }
