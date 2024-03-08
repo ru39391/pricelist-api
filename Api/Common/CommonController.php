@@ -10,6 +10,17 @@ class CommonController extends AuthController
 {
   use CommonTrait;
 
+  private function batchItems($arr, $dateKey, $class)
+  {
+    $output = [];
+
+    foreach ($arr as $item) {
+      $output[] = $item[$dateKey] ? $this->handleItem($item, $dateKey, $class) : $item;
+    }
+
+    return $output;
+  }
+
   protected function getItems($class, $children = [], $dataKey = '')
   {
     $response = [];
@@ -43,8 +54,9 @@ class CommonController extends AuthController
         $response[$key] = $value;
       }
     } else {
-      foreach ($validatedData as $item) {
-        $response[] = $item[$dateKey] ? $this->handleItem($item, $dateKey, $class) : $item;
+      for ($i = 0; $i < count($validatedData); $i += 100) {
+        $currData = array_slice($validatedData, $i, 100);
+        $response = $this->batchItems($currData, $dateKey, $class);
       }
 
       $handledItems = array_filter($response, fn($item) => is_array($item));
