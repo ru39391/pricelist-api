@@ -9,12 +9,6 @@ class GetController extends CommonController
 {
   public function index()
   {
-    return $this->getItems(
-      \pricelistSubdept::class,
-      [
-        Constants::GROUPS_PARAM_KEY => \pricelistGroup::class
-      ],
-      Constants::SUBDEPT_KEY
-    );
+    return $this->getItems(\pricelistSubdept::class);
   }
 }

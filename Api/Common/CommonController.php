@@ -25,14 +25,9 @@ class CommonController extends AuthController
   {
     $response = [];
     $items = zoomx('modx')->getCollection($class);
+
     foreach($items as $item) {
       $data = $item->toArray();
-      if(count($children) > 0) {
-        foreach($this->getChildren($children, $dataKey, $item->item_id) as $key => $value) {
-          $data[$key] = $value;
-        }
-      }
-
       $response[] = $data;
     }
 
