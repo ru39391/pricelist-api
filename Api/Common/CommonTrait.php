@@ -43,7 +43,12 @@ trait CommonTrait
   private function validateKeys($arr, $keys)
   {
     $validatedArr = array_map(fn($item) => in_array($item, array_keys($arr), true), $keys);
-    return array_reduce($validatedArr, fn($carry, $item) => $carry && $item, true);
+    $keysList = array_combine($keys, array_map(fn($item) => array_key_exists($item, $arr), $keys));
+
+    return [
+      'keysList' => array_filter($keysList, fn($item) => $item === false),
+      'isKeysValid' => array_reduce($validatedArr, fn($carry, $item) => $carry && $item, true)
+    ];
   }
 
   public function getItem($class, $data)
@@ -65,7 +70,10 @@ trait CommonTrait
 
   public function validateData($item, $dateKey, $keys)
   {
-    if (is_array($item) && count($item) > 0 && $this->validateKeys($item, $keys)) {
+    ['keysList' => $keysList, 'isKeysValid' => $isKeysValid] = $this->validateKeys($item, $keys);
+    $isValid = is_array($item) && count($item) > 0 && $isKeysValid;
+
+    if ($isValid) {
       $validatedData = [];
       foreach ($item as $key => $value) {
         switch ($key) {
@@ -114,9 +122,19 @@ trait CommonTrait
         }
       }
 
-      $validatedData[$dateKey] = in_array(false, array_map(fn($item) => $item[Constants::IS_VALID_KEY], $validatedData), true) ? null : date('Y-m-d H:i:s');
+      $isDataNotValid = in_array(false, array_map(fn($item) => $item[Constants::IS_VALID_KEY], $validatedData), true);
+      $validatedData[Constants::IS_VALID_KEY] = $isDataNotValid ? false : true;
+      $validatedData[$dateKey] = $isDataNotValid ? null : date('Y-m-d H:i:s');
       return array_merge(...array_map(fn($key, $value) => [$key => is_array($value) ?  $value[$key] : $value], array_keys($validatedData), $validatedData));
     }
-    return null;
+    return [
+      Constants::ID_KEY => $item[Constants::ID_KEY],
+      Constants::NAME_KEY => $item[Constants::NAME_KEY],
+      Constants::IS_VALID_KEY => $isValid,
+      'isArray' => is_array($item),
+      'isNotEmpty' => count($item) > 0,
+      'isValidKeys' => $isKeysValid,
+      'keysList' => $keysList
+    ];
   }
 }
