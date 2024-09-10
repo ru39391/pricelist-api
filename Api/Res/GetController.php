@@ -57,14 +57,15 @@ class GetController extends AuthController
     ));
 
     $resourcesList = $this->modx->getCollection(\modResource::class, $query);
+
+    usort($resourcesList, fn($a, $b) => $b->publishedon - $a->publishedon);
+
     if (count($resourcesList) > 0) {
       $resources = array_map(fn($item) => array(
         'id' => $item->id,
         'isParent' => (bool)$item->isfolder,
-        'page' => array(
-          'name' => trim($item->pagetitle),
-          'uri' => $item->uri,
-        ),
+        'name' => trim($item->pagetitle),
+        'uri' => $item->uri,
         'parent' => $this->getParent($item->parent),
         'template' => array(
           'template_id' => (int)$item->template_id,
@@ -72,11 +73,11 @@ class GetController extends AuthController
         ),
         'publishedon' => array(
           'value' => $item->publishedon,
-          'date' => date('d-m-Y H:i:s', $item->publishedon)
+          'date' => date('d.m.Y H:i', $item->publishedon)
         ),
         'editedon' => array(
           'value' => $item->editedon,
-          'date' => date('d-m-Y H:i:s', $item->editedon)
+          'date' => date('d.m.Y H:i', $item->editedon)
         )
         /*
         'dept' => $this->getArr($item->dept_id),
