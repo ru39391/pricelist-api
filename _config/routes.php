@@ -9,7 +9,8 @@ $routes = [
   'pricelist' => 'Pricelist',
   'depts' => 'Department',
   'subdepts' => 'Subdepartment',
-  'groups' => 'Group'
+  'groups' => 'Group',
+  'reslinks' => 'Reslink'
 ];
 
 $methods = [

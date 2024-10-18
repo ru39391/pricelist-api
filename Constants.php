@@ -19,9 +19,12 @@ class Constants
   const COMPLEX_KEY = 'complex';
   const IS_VISIBLE_KEY = 'isVisible';
   const INDEX_KEY = 'index';
+  const CONFIG_KEY = 'config';
 
+  const DEPTS_PARAM_KEY = 'depts';
   const SUBDEPTS_PARAM_KEY = 'subdepts';
   const GROUPS_PARAM_KEY = 'groups';
+  const ITEMS_PARAM_KEY = 'pricelist';
 
   const DEPT_KEYS = [
     Constants::ID_KEY,
@@ -51,6 +54,14 @@ class Constants
     Constants::COMPLEX_KEY,
     Constants::IS_VISIBLE_KEY,
     Constants::INDEX_KEY,
+  ];
+  const RESLINK_KEYS = [
+    Constants::ID_KEY,
+    Constants::DEPTS_PARAM_KEY,
+    Constants::SUBDEPTS_PARAM_KEY,
+    Constants::GROUPS_PARAM_KEY,
+    Constants::ITEMS_PARAM_KEY,
+    Constants::CONFIG_KEY
   ];
 
   const VALUES_ERROR_KEY = 'error_values';

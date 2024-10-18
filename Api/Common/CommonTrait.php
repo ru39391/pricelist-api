@@ -73,52 +73,41 @@ trait CommonTrait
     ['keysList' => $keysList, 'isKeysValid' => $isKeysValid] = $this->validateKeys($item, $keys);
     $isValid = is_array($item) && count($item) > 0 && $isKeysValid;
 
+    $strKeys = [
+      Constants::NAME_KEY,
+      Constants::COMPLEX_KEY,
+      Constants::DEPTS_PARAM_KEY,
+      Constants::SUBDEPTS_PARAM_KEY,
+      Constants::GROUPS_PARAM_KEY,
+      Constants::ITEMS_PARAM_KEY,
+      Constants::CONFIG_KEY
+    ];
+    $boolKeys = [Constants::IS_COMPLEX_KEY, Constants::IS_COMPLEX_ITEM_KEY, Constants::IS_VISIBLE_KEY];
+    $categoryKeys = [Constants::GROUP_KEY];
+
     if ($isValid) {
       $validatedData = [];
       foreach ($item as $key => $value) {
-        switch ($key) {
-          case Constants::NAME_KEY:
-            $validatedData[$key] = [
-              $key => $this->isStrValid($value) ? trim($value) : $value,
-              Constants::IS_VALID_KEY => $this->isStrValid($value)
-            ];
-            break;
-          case Constants::COMPLEX_KEY:
-            $validatedData[$key] = [
-              $key => $this->isStrValid($value) ? trim($value) : $value,
-              Constants::IS_VALID_KEY => $this->isStrValid($value)
-            ];
-            break;
-          case Constants::IS_COMPLEX_KEY:
-            $validatedData[$key] = [
-              $key => $this->isBoolValid($value) ? (int)$value : $value,
-              Constants::IS_VALID_KEY => $this->isBoolValid($value)
-            ];
-            break;
-          case Constants::IS_COMPLEX_ITEM_KEY:
-            $validatedData[$key] = [
-              $key => $this->isBoolValid($value) ? (int)$value : $value,
-              Constants::IS_VALID_KEY => $this->isBoolValid($value)
-            ];
-            break;
-          case Constants::IS_VISIBLE_KEY:
-            $validatedData[$key] = [
-              $key => $this->isBoolValid($value) ? (int)$value : $value,
-              Constants::IS_VALID_KEY => $this->isBoolValid($value)
-            ];
-            break;
-          case Constants::GROUP_KEY:
-            $validatedData[$key] = [
-              $key => $this->isCategoryIdValid($value) ? $this->handleEmptyVal($value) : $value,
-              Constants::IS_VALID_KEY => $this->isCategoryIdValid($value)
-            ];
-            break;
-          default:
-            $validatedData[$key] = [
-              $key => $this->isNumValid($value) ? (int)$value : $value,
-              Constants::IS_VALID_KEY => $this->isNumValid($value)
-            ];
-            break;
+        if (in_array($key, $strKeys)) {
+          $validatedData[$key] = [
+            $key => $this->isStrValid($value) ? trim($value) : $value,
+            Constants::IS_VALID_KEY => $this->isStrValid($value)
+          ];
+        } elseif (in_array($key, $boolKeys)) {
+          $validatedData[$key] = [
+            $key => $this->isBoolValid($value) ? (int)$value : $value,
+            Constants::IS_VALID_KEY => $this->isBoolValid($value)
+          ];
+        } elseif (in_array($key, $categoryKeys)) {
+          $validatedData[$key] = [
+            $key => $this->isCategoryIdValid($value) ? $this->handleEmptyVal($value) : $value,
+            Constants::IS_VALID_KEY => $this->isCategoryIdValid($value)
+          ];
+        } else {
+          $validatedData[$key] = [
+            $key => $this->isNumValid($value) ? (int)$value : $value,
+            Constants::IS_VALID_KEY => $this->isNumValid($value)
+          ];
         }
       }
 

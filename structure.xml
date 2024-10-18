@@ -3,15 +3,19 @@
 <model package="pricelist" baseClass="xPDOObject" platform="mysql" defaultEngine="InnoDB"
   version="1.1">
   <object class="pricelistLink" table="pricelist_links" extends="xPDOSimpleObject">
-    <field key="res" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
+    <field key="item_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer"
       null="false" default="" />
+
     <field key="depts" dbtype="text" phptype="string" null="false" default="" />
     <field key="subdepts" dbtype="text" phptype="string" null="false" default="" />
     <field key="groups" dbtype="text" phptype="string" null="false" default="" />
-    <field key="items" dbtype="text" phptype="string" null="false" default="" />
+    <field key="pricelist" dbtype="text" phptype="string" null="false" default="" />
     <field key="config" dbtype="text" phptype="string" null="false" default="" />
 
-    <aggregate alias="Res" class="modResource" local="res" foreign="id" cardinality="one"
+    <field key="createdon" dbtype="datetime" phptype="datetime" null="false" />
+    <field key="updatedon" dbtype="datetime" phptype="datetime" null="true" />
+
+    <aggregate alias="Res" class="modResource" local="item_id" foreign="id" cardinality="one"
       owner="foreign" />
   </object>
 
