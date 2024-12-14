@@ -2,7 +2,7 @@
 /** @var FastRoute\RouteCollector  $router */
 /** @var modX  $modx */
 
-$router->get('services', Zoomx\Controllers\ServicesController::class);
+$router->get('prices', Zoomx\Controllers\PricesController::class);
 $router->get('api/res', Zoomx\Controllers\Api\Res\GetController::class);
 
 $routes = [

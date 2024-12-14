@@ -23,7 +23,7 @@ trait CommonTrait
 
   private function isStrValid($value)
   {
-    return !empty($value) && is_string($value) && mb_strlen($value) < 255;
+    return !empty($value) && is_string($value) && mb_strlen($value) <= 255;
   }
 
   private function isCategoryIdValid($value)

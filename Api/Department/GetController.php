@@ -3,9 +3,9 @@
 namespace Zoomx\Controllers\Api\Department;
 
 use Zoomx\Controllers\Constants;
-use Zoomx\Controllers\Api\Common\CommonController;
+use Zoomx\Controllers\Api\Common\GetController as CommonGetController;
 
-class GetController extends CommonController
+class GetController extends CommonGetController
 {
   public function index()
   {

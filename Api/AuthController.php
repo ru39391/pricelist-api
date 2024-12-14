@@ -10,7 +10,7 @@ class AuthController extends BaseController
   public function __construct(modX $modx)
   {
     parent::__construct($modx);
-    //$this->adminAuth();
+    $this->adminAuth();
   }
 
   private function adminAuth()

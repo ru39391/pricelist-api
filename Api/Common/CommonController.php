@@ -21,21 +21,6 @@ class CommonController extends AuthController
     return $output;
   }
 
-  protected function getItems($class, $children = [], $dataKey = '')
-  {
-    $response = [];
-    $items = zoomx('modx')->getCollection($class);
-
-    foreach($items as $item) {
-      $data = $item->toArray();
-      $response[] = $data;
-    }
-
-    $responseCode = 200;
-
-    return jsonx($response, [], $responseCode);
-  }
-
   protected function handleData($class, $dateKey, $error, $keys = [])
   {
     $result = [];
