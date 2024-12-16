@@ -12,6 +12,8 @@ class GetController extends BaseController
 
   protected function getItems($class, $children = [], $dataKey = '')
   {
+    zoomx('modx')->loadClass($class, zoomx('modx')->getOption('core_path') . 'components/pricelist/model/pricelist/');
+
     $response = [];
     $payload = $this->getInputData();
     $resources = zoomx('modx')->getCollection($class);

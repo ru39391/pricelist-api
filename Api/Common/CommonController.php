@@ -23,6 +23,8 @@ class CommonController extends AuthController
 
   protected function handleData($class, $dateKey, $error, $keys = [])
   {
+    zoomx('modx')->loadClass($class, zoomx('modx')->getOption('core_path') . 'components/pricelist/model/pricelist/');
+
     $result = [];
     $response = [];
     $validatedData = array_map(fn($item) => $this->validateData($item, $dateKey, $keys), $this->getInputData());
