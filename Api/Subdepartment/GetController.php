@@ -3,18 +3,12 @@
 namespace Zoomx\Controllers\Api\Subdepartment;
 
 use Zoomx\Controllers\Constants;
-use Zoomx\Controllers\Api\Common\CommonController;
+use Zoomx\Controllers\Api\Common\GetController as CommonGetController;
 
-class GetController extends CommonController
+class GetController extends CommonGetController
 {
   public function index()
   {
-    return $this->getItems(
-      \pricelistSubdept::class,
-      [
-        Constants::GROUPS_PARAM_KEY => \pricelistGroup::class
-      ],
-      Constants::SUBDEPT_KEY
-    );
+    return $this->getItems(\pricelistSubdept::class);
   }
 }

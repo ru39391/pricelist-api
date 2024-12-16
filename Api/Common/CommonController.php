@@ -10,47 +10,52 @@ class CommonController extends AuthController
 {
   use CommonTrait;
 
-  protected function getItems($class, $children = [], $dataKey = '')
+  private function batchItems($arr, $dateKey, $class)
   {
-    $response = [];
-    $items = zoomx('modx')->getCollection($class);
-    foreach($items as $item) {
-      $data = $item->toArray();
-      if(count($children) > 0) {
-        foreach($this->getChildren($children, $dataKey, $item->item_id) as $key => $value) {
-          $data[$key] = $value;
-        }
-      }
+    $output = [];
 
-      $response[] = $data;
+    foreach ($arr as $item) {
+      $output[] = $item[$dateKey] ? $this->handleItem($item, $dateKey, $class) : $item;
     }
 
-    $responseCode = count($items) > 0 ? 200 : 400;
-
-    return jsonx($response, [], $responseCode);
+    return $output;
   }
 
   protected function handleData($class, $dateKey, $error, $keys = [])
   {
+    zoomx('modx')->loadClass($class, zoomx('modx')->getOption('core_path') . 'components/pricelist/model/pricelist/');
+
+    $result = [];
     $response = [];
     $validatedData = array_map(fn($item) => $this->validateData($item, $dateKey, $keys), $this->getInputData());
+    $validItems = array_filter($validatedData, fn($item) => $item[Constants::IS_VALID_KEY] === true);
+    $inValidItems = array_filter($validatedData, fn($item) => $item[Constants::IS_VALID_KEY] === false);
+    $counter = [
+      'valid' => count($validItems),
+      'inValid' => count($inValidItems),
+      'total' => count($validatedData)
+    ];
 
-    if (in_array(null, $validatedData, true)) {
+    if (count($validatedData) === count($inValidItems)) {
       foreach ([
         'success' => false,
         'message' => Constants::DATA_ERROR_MSG,
+        'counter' => $counter,
+        'inValid' => $inValidItems,
       ] as $key => $value) {
         $response[$key] = $value;
       }
     } else {
-      foreach ($validatedData as $item) {
-        $response[] = $item[$dateKey] ? $this->handleItem($item, $dateKey, $class) : $item;
+      for ($i = 0; $i < count($validItems); $i += 100) {
+        $currData = array_slice($validItems, $i, 100);
+        $result[] = $this->batchItems($currData, $dateKey, $class);
       }
 
-      $handledItems = array_filter($response, fn($item) => is_array($item));
-      $itemDates = array_map(fn($item) => $item[$dateKey], $handledItems);
-      $nulledItems = array_filter($itemDates, fn($item) => $item === null);
-      if (count($nulledItems) === count($validatedData)) {
+      $handledItems = array_filter(array_merge(...$result), fn($item) => is_array($item));
+      $validHandledItems = array_filter($handledItems, fn($item) => $item[$dateKey] !== null);
+      $inValidHandledItems = array_filter($handledItems, fn($item) => $item[$dateKey] === null);
+
+      if (count($validItems) === count($inValidHandledItems)) {
         foreach ([
           'success' => false,
           'message' => $error,
@@ -58,13 +63,31 @@ class CommonController extends AuthController
           $response[$key] = $value;
         }
       } else {
-        $response['success'] = true;
+        foreach ([
+          'success' => true,
+        ] as $key => $value) {
+          $response[$key] = $value;
+        }
+      }
+
+      foreach ([
+        'counter' => array_merge(
+          [
+            'succeed' => count($validHandledItems),
+            'failed' => count($inValidHandledItems),
+          ],
+          $counter
+        ),
+        'succeed' => $validHandledItems,
+        'failed' => $inValidHandledItems,
+        'inValid' => $inValidItems,
+      ] as $key => $value) {
+        $response[$key] = $value;
       }
     }
 
     $responseCode = $response['success'] ? 200 : 400;
 
     return jsonx($response, [], $responseCode);
-    //return jsonx($validatedData, [], 200);
   }
 }

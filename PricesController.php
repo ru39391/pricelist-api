@@ -2,12 +2,14 @@
 
 namespace Zoomx\Controllers;
 
-class ServicesController extends BaseController
+class PricesController extends BaseController
 {
   public function index()
   {
     if ($this->modx->user->isMember('Administrator')) {
-      return viewx('services.tpl');
+      $data = zoomx()->getResource(2365);
+
+      return viewx('app.tpl', $data->toArray());
     } else {
       return redirectx(zoomx()->getResource(43)->alias, 301);
     }

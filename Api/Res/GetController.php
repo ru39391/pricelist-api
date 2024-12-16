@@ -12,8 +12,10 @@ class GetController extends AuthController
 
   private function getParent($id) {
     $res = $this->modx->getObject(\modResource::class, array('id' => $id));
+
     return array(
-      'pagetitle' => trim($res->pagetitle),
+      'parent_id' => $res->id,
+      'name' => trim($res->pagetitle),
       'uri' => $res->uri,
     );
   }
@@ -32,15 +34,20 @@ class GetController extends AuthController
       'modResource.uri as uri',
       'modResource.deleted as deleted',
       'modResource.published as published',
+      'template.id as template_id',
+      'template.description as template_desc'
+      /*
       'department_id.value as dept_id',
       'specialization_ids.value as subdept_id',
       'group_ids.value as group_id',
-      'template.description as template_desc'
+      */
     ));
     $query->leftJoin(\modTemplate::class, 'template', 'modResource.template = template.id');
+    /*
     $query->leftJoin(\modTemplateVarResource::class, 'department_id', 'modResource.id = department_id.contentid AND department_id.tmplvarid = 25');
     $query->leftJoin(\modTemplateVarResource::class, 'specialization_ids', 'modResource.id = specialization_ids.contentid AND specialization_ids.tmplvarid = 26');
     $query->leftJoin(\modTemplateVarResource::class, 'group_ids', 'modResource.id = group_ids.contentid AND group_ids.tmplvarid = 28');
+    */
     $query->groupby('modResource.id');
     $query->where(array(
       'modResource.deleted' => 0,
@@ -49,23 +56,35 @@ class GetController extends AuthController
       'modResource.parent:NOT IN' => array(0,3,5,37,40,230,243,356),
     ));
 
-    $resColl = $this->modx->getCollection(\modResource::class, $query);
-    if (count($resColl) > 0) {
+    $resourcesList = $this->modx->getCollection(\modResource::class, $query);
+
+    usort($resourcesList, fn($a, $b) => $b->publishedon - $a->publishedon);
+
+    if (count($resourcesList) > 0) {
       $resources = array_map(fn($item) => array(
         'id' => $item->id,
         'isParent' => (bool)$item->isfolder,
-        'res' => array(
-          'pagetitle' => trim($item->pagetitle),
-          'uri' => $item->uri,
-        ),
+        'name' => trim($item->pagetitle),
+        'uri' => $item->uri,
         'parent' => $this->getParent($item->parent),
-        'template' => $item->template_desc,
+        'template' => array(
+          'template_id' => (int)$item->template_id,
+          'name' => $item->template_desc
+        ),
+        'publishedon' => array(
+          'value' => $item->publishedon,
+          'date' => date('d.m.Y H:i', $item->publishedon)
+        ),
+        'editedon' => array(
+          'value' => $item->editedon,
+          'date' => date('d.m.Y H:i', $item->editedon)
+        )
+        /*
         'dept' => $this->getArr($item->dept_id),
         'subdept' => $this->getArr($item->subdept_id),
         'group' => $this->getArr($item->group_id),
-        'publishedon' => $item->publishedon,
-        'editedon' => $item->editedon,
-      ), $resColl);
+        */
+      ), $resourcesList);
 
       return jsonx($resources);
     }
