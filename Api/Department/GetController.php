@@ -2,35 +2,13 @@
 
 namespace Zoomx\Controllers\Api\Department;
 
-use Zoomx\Controllers\Api\AuthController as AuthController;
+use Zoomx\Controllers\Constants;
+use Zoomx\Controllers\Api\Common\GetController as CommonGetController;
 
-class GetController extends AuthController
+class GetController extends CommonGetController
 {
-  private function getChildren($objClass, $department_id) {
-    $arr = $this->modx->getCollection($objClass, array('department_id' => $department_id));
-    return array_map(fn($item) => array(
-      'id' => $item->id,
-      'name' => trim($item->name),
-    ), $arr);
-  }
-
   public function index()
   {
-    $deptsColl = $this->modx->getCollection(\PricelistDepartment::class, array('name:!=' => ''));
-    if (count($deptsColl) > 0) {
-      $depts = array_map(fn($item) => array(
-        'id' => $item->id,
-        'name' => trim($item->name),
-        'subdepts' => $this->getChildren(\PricelistSpecialization::class, $item->id),
-        'groups' => $this->getChildren(\PricelistGroupOfServices::class, $item->id),
-        'other_id' => $item->other_id,
-        'page_id' => $item->page_id,
-        'sort' => $item->sort,
-      ), $deptsColl);
-
-      return jsonx($depts);
-    }
-
-    return jsonx([], [], 404);
+    return $this->getItems(\pricelistDept::class);
   }
 }

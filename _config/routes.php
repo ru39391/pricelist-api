@@ -2,9 +2,26 @@
 /** @var FastRoute\RouteCollector  $router */
 /** @var modX  $modx */
 
-$router->get('services', Zoomx\Controllers\ServicesController::class);
-$router->get('api/pages', Zoomx\Controllers\Api\Page\GetController::class);
-$router->get('api/depts', Zoomx\Controllers\Api\Department\GetController::class);
-$router->get('api/subdepts', Zoomx\Controllers\Api\Subdepartment\GetController::class);
-$router->get('api/svgroups', Zoomx\Controllers\Api\Group\GetController::class);
-$router->get('api/pricelist', Zoomx\Controllers\Api\Pricelist\GetController::class);
+$router->get('prices', Zoomx\Controllers\PricesController::class);
+$router->get('api/res', Zoomx\Controllers\Api\Res\GetController::class);
+
+$routes = [
+  'pricelist' => 'Pricelist',
+  'depts' => 'Department',
+  'subdepts' => 'Subdepartment',
+  'groups' => 'Group',
+  'reslinks' => 'Reslink'
+];
+
+$methods = [
+  'get' => 'GetController',
+  'post' => 'CreateController',
+  'patch' => 'UpdateController',
+  'delete' => 'DeleteController'
+];
+
+foreach ($routes as $key => $value) {
+  foreach ($methods as $method => $controller) {
+    $router->{$method}("api/{$key}", "Zoomx\\Controllers\\Api\\$value\\$controller");
+  }
+}

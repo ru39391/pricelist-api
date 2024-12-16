@@ -4,7 +4,7 @@ namespace Zoomx\Controllers;
 
 use modX;
 
-abstract class Controller
+abstract class BaseController
 {
     protected $modx;
 
