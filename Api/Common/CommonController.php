@@ -27,7 +27,7 @@ class CommonController extends AuthController
 
     $result = [];
     $response = [];
-    $validatedData = array_map(fn($item) => $this->validateData($item, $dateKey, $keys), $this->getInputData());
+    $validatedData = array_map(fn($item) => $this->validateData($item, $dateKey, $keys, $class), $this->getInputData());
     $validItems = array_filter($validatedData, fn($item) => $item[Constants::IS_VALID_KEY] === true);
     $inValidItems = array_filter($validatedData, fn($item) => $item[Constants::IS_VALID_KEY] === false);
     $counter = [

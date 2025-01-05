@@ -21,9 +21,11 @@ trait CommonTrait
     return $this->isNumeric($value) && $value >= 0;
   }
 
-  private function isStrValid($value)
+  private function isStrValid($value, $class)
   {
-    return !empty($value) && is_string($value) && mb_strlen($value) <= 255;
+    $isValueValid = !empty($value) && is_string($value);
+
+    return $class === \pricelistLink::class ? $isValueValid : $isValueValid && mb_strlen($value) <= 255;
   }
 
   private function isCategoryIdValid($value)
@@ -68,7 +70,7 @@ trait CommonTrait
     return json_decode(file_get_contents('php://input'), true);
   }
 
-  public function validateData($item, $dateKey, $keys)
+  public function validateData($item, $dateKey, $keys, $class)
   {
     ['keysList' => $keysList, 'isKeysValid' => $isKeysValid] = $this->validateKeys($item, $keys);
     $isValid = is_array($item) && count($item) > 0 && $isKeysValid;
@@ -90,8 +92,8 @@ trait CommonTrait
       foreach ($item as $key => $value) {
         if (in_array($key, $strKeys)) {
           $validatedData[$key] = [
-            $key => $this->isStrValid($value) ? trim($value) : $value,
-            Constants::IS_VALID_KEY => $this->isStrValid($value)
+            $key => $this->isStrValid($value, $class) ? trim($value) : $value,
+            Constants::IS_VALID_KEY => $this->isStrValid($value, $class)
           ];
         } elseif (in_array($key, $boolKeys)) {
           $validatedData[$key] = [
