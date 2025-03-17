@@ -30,12 +30,13 @@ class DeleteController extends CommonController
     return $this->deleteItem($data, $dateKey, $class);
   }
 
-  protected function deleteData($class)
+  protected function deleteData($class, $keys)
   {
     return $this->handleData(
       $class,
       Constants::UPDATEDON_KEY,
-      Constants::VALUES_DELETE_ERROR_MSG
+      Constants::VALUES_DELETE_ERROR_MSG,
+      $keys
     );
   }
 }

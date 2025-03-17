@@ -44,12 +44,12 @@ trait CommonTrait
 
   private function validateKeys($arr, $keys)
   {
-    $validatedArr = array_map(fn($item) => in_array($item, array_keys($arr), true), $keys);
-    $keysList = array_combine($keys, array_map(fn($item) => array_key_exists($item, $arr), $keys));
+    $validatedKeys = array_merge(...array_map(fn($key) => array($key => array_key_exists($key, $arr)), $keys));
+    $validatedValues = array_map(fn($key) => $validatedKeys[$key], $keys);
 
     return [
-      'keysList' => array_filter($keysList, fn($item) => $item === false),
-      'isKeysValid' => array_reduce($validatedArr, fn($carry, $item) => $carry && $item, true)
+      'validatedKeys' => $validatedKeys,
+      'isKeysValid' => array_reduce($validatedValues, fn($carry, $item) => $carry && $item, true)
     ];
   }
 
@@ -72,7 +72,7 @@ trait CommonTrait
 
   public function validateData($item, $dateKey, $keys, $class)
   {
-    ['keysList' => $keysList, 'isKeysValid' => $isKeysValid] = $this->validateKeys($item, $keys);
+    ['validatedKeys' => $validatedKeys, 'isKeysValid' => $isKeysValid] = $this->validateKeys($item, $keys);
     $isValid = is_array($item) && count($item) > 0 && $isKeysValid;
 
     $strKeys = [
@@ -89,7 +89,9 @@ trait CommonTrait
 
     if ($isValid) {
       $validatedData = [];
-      foreach ($item as $key => $value) {
+      $data = array_merge(...array_map(fn($key) => array($key => $item[$key]), array_keys($validatedKeys)));
+
+      foreach ($data as $key => $value) {
         if (in_array($key, $strKeys)) {
           $validatedData[$key] = [
             $key => $this->isStrValid($value, $class) ? trim($value) : $value,
@@ -116,6 +118,7 @@ trait CommonTrait
       $isDataNotValid = in_array(false, array_map(fn($item) => $item[Constants::IS_VALID_KEY], $validatedData), true);
       $validatedData[Constants::IS_VALID_KEY] = $isDataNotValid ? false : true;
       $validatedData[$dateKey] = $isDataNotValid ? null : date('Y-m-d H:i:s');
+
       return array_merge(...array_map(fn($key, $value) => [$key => is_array($value) ?  $value[$key] : $value], array_keys($validatedData), $validatedData));
     }
     return [
@@ -125,7 +128,7 @@ trait CommonTrait
       'isArray' => is_array($item),
       'isNotEmpty' => count($item) > 0,
       'isValidKeys' => $isKeysValid,
-      'keysList' => $keysList
+      'validatedKeys' => $validatedKeys
     ];
   }
 }
