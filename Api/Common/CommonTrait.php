@@ -89,7 +89,7 @@ trait CommonTrait
 
     if ($isValid) {
       $validatedData = [];
-      $data = array_merge(...array_map(fn($key) => array($key => $item[$key]), array_keys($validatedKeys)));
+      $data = array_merge(...array_map(fn($key) => array($key => $item[$key]), array_keys(count($keys) > 0 ? $validatedKeys : $item)));
 
       foreach ($data as $key => $value) {
         if (in_array($key, $strKeys)) {
