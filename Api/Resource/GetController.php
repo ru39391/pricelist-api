@@ -6,9 +6,9 @@ use Zoomx\Controllers\Api\AuthController;
 
 class GetController extends AuthController
 {
-
   public function index()
   {
+    $response = [];
     $parents = [];
     $resources = [];
     $templates = [];
@@ -40,17 +40,20 @@ class GetController extends AuthController
         $templates[] = $tpl->toArray();
       }
 
-      return array(
+      $response = array(
         'counter' => array(
           'parents' => count(array_unique($parents)),
           'resources' => count($resources),
         ),
         'templates' => $templates,
-        //'parents' => array_unique($parents),
-        //'resources' => $resources,
+        'parents' => array_unique($parents),
+        'resources' => $resources,
+        'success' => true
       );
     }
 
-    return jsonx([], [], 404);
+    $responseCode = $response['success'] ? 200 : 400;
+
+    return jsonx($response, [], $responseCode);
   }
 }

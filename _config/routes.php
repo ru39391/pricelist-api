@@ -5,6 +5,7 @@
 $router->get('prices', Zoomx\Controllers\PricesController::class);
 $router->get('api/res', Zoomx\Controllers\Api\Res\GetController::class);
 $router->get('api/resource', Zoomx\Controllers\Api\Resource\GetController::class);
+$router->post('api/resource', Zoomx\Controllers\Api\Resource\CreateController::class);
 
 $routes = [
   'pricelist' => 'Pricelist',
