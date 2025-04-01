@@ -57,12 +57,19 @@ class CreateController extends AuthController
       }
     }
 
+    $succeedCounter = count($output['succeed']);
+    $existedCounter = count($output['existed']);
+
     $output['counter'] = array(
-      'succeed' => count($output['succeed']),
-      'existed' => count($output['existed'])
+      'input' => count($items),
+      'output' => $succeedCounter + $existedCounter,
+      'succeed' => $succeedCounter,
+      'existed' => $existedCounter,
     );
 
-    $responseCode = count($output['succeed']) > 0 ? 200 : 400;
+    $output['isHandled'] = $output['input'] === $output['output'];
+
+    $responseCode = $output['isHandled'] ? 200 : 400;
 
     return jsonx($output, [], $responseCode);
   }
