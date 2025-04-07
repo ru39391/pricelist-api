@@ -35,7 +35,10 @@ class DeleteController extends CommonController
     if(count($resources) > 0) {
       zoomx('modx')->runSnippet('sendResLinksData', array(
         'resources' => $resources,
-        'item' => $itemData
+        Constants::ID_KEY => $itemData[Constants::ID_KEY],
+        Constants::NAME_KEY => $itemData[Constants::NAME_KEY],
+        Constants::PRICE_KEY => $itemData[Constants::PRICE_KEY],
+        Constants::IS_VISIBLE_KEY => $itemData[Constants::IS_VISIBLE_KEY]
       ));
     }
 
