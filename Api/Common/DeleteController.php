@@ -19,6 +19,8 @@ class DeleteController extends CommonController
       return $output;
     }
 
+    $this->modx->loadClass(\pricelistLink::class, zoomx('modx')->getOption('core_path') . 'components/pricelist/model/pricelist/');
+
     $resources = [];
     $pricelistLinks = $this->modx->getCollection(\pricelistLink::class);
 
@@ -33,7 +35,7 @@ class DeleteController extends CommonController
     }
 
     if(count($resources) > 0) {
-      zoomx('modx')->runSnippet('sendResLinksData', array(
+      $this->modx->runSnippet('sendResLinksData', array(
         'resources' => $resources,
         Constants::ID_KEY => $itemData[Constants::ID_KEY],
         Constants::NAME_KEY => $itemData[Constants::NAME_KEY],
