@@ -15,7 +15,7 @@ class DeleteController extends CommonController
     $itemData = $item->toArray();
     $output = $item->remove() ? $data : $itemData;
 
-    if($class !== \pricelistItem::class || $itemData[Constants::GROUP_KEY] > 0) {
+    if($class !== \pricelistItem::class) {
       return $output;
     }
 
@@ -29,8 +29,9 @@ class DeleteController extends CommonController
       $linkItem = $pricelistLinkItem->toArray();
       $config = json_decode($linkItem[Constants::CONFIG_KEY], true);
       $pricelist = json_decode($linkItem[Constants::ITEMS_PARAM_KEY], true);
+      $isItemMatched = $config[$itemData[Constants::GROUP_KEY] > 0 ? Constants::IS_GROUP_IGNORED_KEY : Constants::IS_COMPLEX_DATA_KEY] === true;
 
-      if($config['isComplexData'] === true && in_array($itemData[Constants::ID_KEY], $pricelist)) {
+      if(in_array($itemData[Constants::ID_KEY], $pricelist) && $isItemMatched) {
         $resources[] = $linkItem[Constants::ID_KEY];
       }
     }

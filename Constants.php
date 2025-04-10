@@ -26,6 +26,9 @@ class Constants
   const GROUPS_PARAM_KEY = 'groups';
   const ITEMS_PARAM_KEY = 'pricelist';
 
+  const IS_COMPLEX_DATA_KEY = 'isComplexData';
+  const IS_GROUP_IGNORED_KEY = 'isGroupIgnored';
+
   const DEPT_KEYS = [
     Constants::ID_KEY,
     Constants::NAME_KEY
