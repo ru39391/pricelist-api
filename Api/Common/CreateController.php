@@ -18,9 +18,9 @@ class CreateController extends CommonController
       $output = $item->toArray();
       $output[$dateKey] = null;
     } else {
-      $response = zoomx('modx')->newObject($class, $data);
+      $response = $this->modx->newObject($class, $data);
       $response->save();
-      zoomx('modx')->cacheManager->clearCache();
+      $this->modx->cacheManager->clearCache();
       $output = $response->toArray();
     }
 

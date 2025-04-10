@@ -12,11 +12,11 @@ class GetController extends BaseController
 
   protected function getItems($class, $children = [], $dataKey = '')
   {
-    zoomx('modx')->loadClass($class, zoomx('modx')->getOption('core_path') . 'components/pricelist/model/pricelist/');
+    $this->modx->loadClass($class, $this->modx->getOption('core_path') . 'components/pricelist/model/pricelist/');
 
     $response = [];
     $payload = $this->getInputData();
-    $resources = zoomx('modx')->getCollection($class);
+    $resources = $this->modx->getCollection($class);
 
     foreach($resources as $item) {
       $response[] = $item->toArray();

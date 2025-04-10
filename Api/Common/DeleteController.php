@@ -19,10 +19,11 @@ class DeleteController extends CommonController
       return $output;
     }
 
-    $this->modx->loadClass(\pricelistLink::class, zoomx('modx')->getOption('core_path') . 'components/pricelist/model/pricelist/');
+    $pricelistLinkClass = \pricelistLink::class;
+    $this->modx->loadClass($pricelistLinkClass, $this->modx->getOption('core_path') . 'components/pricelist/model/pricelist/');
 
     $resources = [];
-    $pricelistLinks = $this->modx->getCollection(\pricelistLink::class);
+    $pricelistLinks = $this->modx->getCollection($pricelistLinkClass);
 
     foreach ($pricelistLinks as $pricelistLinkItem) {
       $linkItem = $pricelistLinkItem->toArray();
@@ -54,7 +55,7 @@ class DeleteController extends CommonController
 
     if ((bool)$item) {
       $output = $this->handlePricelistItem($class, $data, $item);
-      zoomx('modx')->cacheManager->clearCache();
+      $this->modx->cacheManager->clearCache();
     } else {
       $output = $data;
       $output[$dateKey] = $item;

@@ -15,7 +15,7 @@ class CreateController extends AuthController
     $output = [];
 
     foreach ($arr as $data) {
-      $item = zoomx('modx')->getObject($class, array('id' => $data['id']));
+      $item = $this->modx->getObject($class, array('id' => $data['id']));
 
       if((bool)$item) {
         $response = $item->toArray();
@@ -23,9 +23,9 @@ class CreateController extends AuthController
 
         $output[] = $response;
       } else {
-        $response = zoomx('modx')->newObject($class, $data);
+        $response = $this->modx->newObject($class, $data);
         $response->save();
-        zoomx('modx')->cacheManager->clearCache();
+        $this->modx->cacheManager->clearCache();
 
         $output[] = $response->toArray();
       }

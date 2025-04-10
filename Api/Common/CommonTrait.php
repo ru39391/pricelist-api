@@ -55,14 +55,14 @@ trait CommonTrait
 
   public function getItem($class, $data)
   {
-    return zoomx('modx')->getObject($class, [
+    return $this->modx->getObject($class, [
       Constants::ID_KEY => $data[Constants::ID_KEY]
     ]);
   }
 
   public function getChildren($children, $dataKey, $value)
   {
-    return array_map(fn($item) => $this->handleArr(zoomx('modx')->getCollection($item, [$dataKey => $value])), $children);
+    return array_map(fn($item) => $this->handleArr($this->modx->getCollection($item, [$dataKey => $value])), $children);
   }
 
   public function getInputData()

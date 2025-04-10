@@ -19,7 +19,7 @@ class UpdateController extends CommonController
         $item->set($key, $data[$key]);
       }
       $item->save();
-      zoomx('modx')->cacheManager->clearCache();
+      $this->modx->cacheManager->clearCache();
       $output = $item->toArray();
     } else {
       $output = $data;
