@@ -11,8 +11,7 @@ class GetController extends AuthController
     $response = [];
     $pages = [];
     $features = [];
-    $parents = [];
-    $resources = [];
+    $parentsList = [];
     $templates = [];
     $tplIds = [];
 
@@ -33,13 +32,11 @@ class GetController extends AuthController
     );
     $resourcesList = array_merge($pubResourcesList, $unpubParentsList);
 
-    usort($resourcesList, fn($a, $b) => $a->id - $b->id);
-
     if (count($resourcesList) > 0) {
       foreach ($resourcesList as $res) {
         $data = $res->toArray();
 
-        $parents[] = $res->parent;
+        $parentsList[] = $res->parent;
         $tplIds[] = $res->template;
 
         if(in_array($res->parent, [40,230,240,243,356])) {
@@ -65,16 +62,24 @@ class GetController extends AuthController
         $templates[] = $tpl->toArray();
       }
 
+      foreach ([$pages, $features, $templates] as $arr) {
+        usort($arr, fn($a, $b) => $a['id'] - $b['id']);
+      }
+
+      $parents = array_unique($parentsList);
+      usort($parents, fn($a, $b) => $a - $b);
+
       $response = array(
         'counter' => array(
-          'parents' => count(array_unique($parents)),
-          'pages' => count($pages),
-          'features' => count($features),
+          'templates' => count($templates),
           'resources' => count($pages) + count($features),
+          'features' => count($features),
+          'pages' => count($pages),
+          'parents' => count($parents),
         ),
-        'pages' => $pages,
+        'pages' => [...$pages],
         'features' => $features,
-        'parents' => array_unique($parents),
+        'parents' => $parents,
         'templates' => $templates,
         'success' => true
       );
