@@ -33,7 +33,7 @@ class GetController extends BaseController
       array(
         'address' => $address,
         'phones' => $phones,
-        'nav' => $this->setNavItems(),
+        'nav' => $this->setItemsArr(),
       )
     );
 

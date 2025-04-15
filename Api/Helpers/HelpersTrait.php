@@ -6,36 +6,49 @@ use Zoomx\Controllers\Constants;
 
 trait HelpersTrait
 {
-  public function setNavData($item)
+  public function setItemsData($item)
   {
+    $url = '';
+    $isWebLink = $item['class_key'] === 'modWebLink';
+    $isIdLinkExist = (int)$item['content'] > 0;
+
+    if($isWebLink) {
+      $data = $isIdLinkExist ? $this->modx->getObject(\modResource::class, (int)$item['content']) : $item['content'];
+      $url =  $isIdLinkExist ? $data->uri : $data;
+    }
+
     return array(
       'id' => $item['id'],
       'menuindex' => $item['menuindex'],
       'menutitle' => $item['menutitle'],
       'pagetitle' => $item['pagetitle'],
-      'uri' => $item['uri'],
+      'uri' => $isWebLink ? $url : $item['uri'],
+      'classKey' => $item['class_key'],
+      'properties' => $item['properties']
     );
   }
 
-  public function setNavItems()
+  public function setItemsArr($parent = 0, $picIds = [3,4], $sortBy = 'menuindex', $sortDir = 'ASC')
   {
-    $nav = [];
+    $items = [];
 
     $where = array(
-      'parent' => 0,
+      'parent' => $parent,
       'deleted' => 0,
       'hidemenu' => 0,
       'published' => 1
     );
-    $navList = $this->modx->getCollection(\modResource::class, $where);
+    $itemsList = $this->modx->getCollection(\modResource::class, $where);
 
-    foreach ($navList as $data) {
-      $pictures = [$data->getTVValue(3), $data->getTVValue(4)];
+    foreach ($itemsList as $data) {
+      $isDataExist = count($picIds) === 0;
+      $pictures = array_map(fn($picId) => $data->getTVValue($picId), $picIds);
 
-      if(array_reduce($pictures, fn($carry, $item) => $carry && (bool)$item, true)) {
-        $nav[] = array_merge(
-          $this->setNavData($data->toArray()),
+      if($isDataExist || array_reduce($pictures, fn($carry, $item) => $carry && (bool)$item, true)) {
+        $items[] = array_merge(
+          $this->setItemsData($data->toArray()),
           array(
+            'publishedon' => $data->publishedon,
             'pictures' => array_map(
               fn($item) => array(
                 'src' => $item,
@@ -48,8 +61,12 @@ trait HelpersTrait
       }
     }
 
-    usort($nav, fn($a, $b) => $b->menuindex - $a->menuindex);
+    if($sortDir === 'ASC') {
+      usort($items, fn($a, $b) => $a[$sortBy] - $b[$sortBy]);
+    } else {
+      usort($items, fn($a, $b) => $b[$sortBy] - $a[$sortBy]);
+    }
 
-    return $nav;
+    return $items;
   }
 }

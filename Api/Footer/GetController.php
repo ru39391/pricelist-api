@@ -12,7 +12,7 @@ class GetController extends BaseController
 
   public function index()
   {
-    $nav = $this->setNavItems();
+    $nav = $this->setItemsArr();
     $docsNav = [];
     $panelNav = [];
     $address = [];
@@ -38,11 +38,11 @@ class GetController extends BaseController
     }
 
     foreach ($docsNavList as $data) {
-      $docsNav[] = $this->setNavData($data->toArray());
+      $docsNav[] = $this->setItemsData($data->toArray());
     }
 
     foreach ($panelNavList as $data) {
-      $panelNav[] = $this->setNavData($data->toArray());
+      $panelNav[] = $this->setItemsData($data->toArray());
     }
 
     // TODO: перенести координаты в сис. настройки
@@ -71,10 +71,10 @@ class GetController extends BaseController
       )
     );
 
-    usort($nav, fn($a, $b) => $b->menuindex - $a->menuindex);
+    usort($nav, fn($a, $b) => $a['menuindex'] - $b['menuindex']);
 
     $mainNav = array_map(
-      fn($item) => $this->setNavData($item),
+      fn($item) => $this->setItemsData($item),
       array_filter($nav, fn($item) => $item['id'] !== 6)
     );
 
@@ -85,8 +85,8 @@ class GetController extends BaseController
       'copyright' => $copyright,
       'nav' => array(
         'main' => [...$mainNav],
-        'docs' => [...$docsNav],
-        'panel' => [...$panelNav]
+        'docs' => $docsNav,
+        'panel' => $panelNav
       )
     );
 
