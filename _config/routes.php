@@ -10,6 +10,7 @@ $router->get('api/res', Zoomx\Controllers\Api\Res\GetController::class);
 $router->get('api/header', Zoomx\Controllers\Api\Header\GetController::class);
 $router->get('api/footer', Zoomx\Controllers\Api\Footer\GetController::class);
 $router->get('api/services', Zoomx\Controllers\Api\Services\GetController::class);
+$router->get('api/doctors', Zoomx\Controllers\Api\Doctors\GetController::class);
 $router->get('api/resource', Zoomx\Controllers\Api\Resource\GetController::class);
 $router->post('api/resource', Zoomx\Controllers\Api\Resource\CreateController::class);
 $router->post('api/resource/{class}', Zoomx\Controllers\Api\Resource\CreateController::class);

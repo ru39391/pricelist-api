@@ -19,6 +19,7 @@ trait HelpersTrait
 
     return array(
       'id' => $item['id'],
+      //'alias' => $item['alias'],
       'menuindex' => $item['menuindex'],
       'menutitle' => $item['menutitle'],
       'pagetitle' => $item['pagetitle'],
@@ -28,17 +29,20 @@ trait HelpersTrait
     );
   }
 
-  public function setItemsArr($parent = 0, $picIds = [3,4], $sortBy = 'menuindex', $sortDir = 'ASC')
+  // TODO: изменить id
+  public function setItemsArr($isNav = true, $parent = 0, $picIds = [3,4], $sortBy = 'menuindex', $sortDir = 'ASC')
   {
     $items = [];
 
     $where = array(
-      'parent' => $parent,
       'deleted' => 0,
-      'hidemenu' => 0,
-      'published' => 1
+      'published' => 1,
+      'parent' => $parent
     );
-    $itemsList = $this->modx->getCollection(\modResource::class, $where);
+    $itemsList = $this->modx->getCollection(
+      \modResource::class,
+      $isNav ? array_merge($where, array('hidemenu' => 0)) : $where
+    );
 
     foreach ($itemsList as $data) {
       $isDataExist = count($picIds) === 0;
@@ -48,14 +52,14 @@ trait HelpersTrait
         $items[] = array_merge(
           $this->setItemsData($data->toArray()),
           array(
-            'publishedon' => $data->publishedon,
             'pictures' => array_map(
               fn($item) => array(
                 'src' => $item,
                 'thumb' => $this->modx->runSnippet('phpthumbon', array('input' => $item, 'options' => 'f=webp'))
               ),
               $pictures
-            )
+            ),
+            'publishedon' => $data->publishedon,
           )
         );
       }

@@ -53,6 +53,7 @@ class GetController extends AuthController
       'modResource.deleted' => 0,
       'modResource.published' => 1,
       'modResource.template:IN' => array(8,9,15,16,17,18,19,20),
+      // TODO: изменить id
       'modResource.parent:NOT IN' => array(0,3,5,37,40,230,243,356),
     ));
 

@@ -15,13 +15,15 @@ class GetController extends BaseController
     $depts = [];
 
     $where = array(
+      // TODO: изменить id
       'parent' => 2,
       'deleted' => 0
     );
     $deptsList = $this->modx->getCollection(\modResource::class, $where);
 
     foreach ($deptsList as $data) {
-      $children = $this->setItemsArr($data->id, [11], 'publishedon', 'DESC');
+      // TODO: изменить id
+      $children = $this->setItemsArr(false, $data->id, [11], 'publishedon', 'DESC');
 
       $depts[] = array_merge(
         $this->setItemsData($data->toArray()),

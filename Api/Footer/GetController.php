@@ -24,12 +24,15 @@ class GetController extends BaseController
       'published' => 1,
     );
     $mainNavList = $this->modx->getCollection(
+      // TODO: изменить id
       \modResource::class, array_merge($where, array('id:IN' => array(40,1494)))
     );
     $docsNavList = $this->modx->getCollection(
+      // TODO: изменить id
       \modResource::class, array_merge($where, array('id:IN' => array(594,595,597)))
     );
     $panelNavList = $this->modx->getCollection(
+      // TODO: изменить id
       \modResource::class, array_merge($where, array('id:IN' => array(325,40)))
     );
 
@@ -75,6 +78,7 @@ class GetController extends BaseController
 
     $mainNav = array_map(
       fn($item) => $this->setItemsData($item),
+      // TODO: изменить id
       array_filter($nav, fn($item) => $item['id'] !== 6)
     );
 
