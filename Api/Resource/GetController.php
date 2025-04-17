@@ -13,6 +13,7 @@ class GetController extends AuthController
     $features = [];
     $parentsList = [];
     $templates = [];
+    $templateVars = [];
     $tplIds = [];
 
     $props = array('deleted' => 0, 'published' => 1);
@@ -58,11 +59,44 @@ class GetController extends AuthController
         array('id:IN' => array_unique($tplIds))
       );
 
+      $templateVarsList = $this->modx->getCollection(
+        \modTemplateVarTemplate::class,
+        array('templateid:IN' => array_unique($tplIds))
+      );
+
       foreach ($templatesList as $tpl) {
-        $templates[] = $tpl->toArray();
+        $item = $tpl->toArray();
+        $tplVars = array_filter(
+          array_map(fn($data) => $data->toArray(), $templateVarsList),
+          fn($data) => $data['templateid'] === $item['id']
+        );
+        $tplVarIds = array_reduce($tplVars, fn($carry, $data) => [...$carry, $data['tmplvarid']], []);
+
+        $templates[] = array_merge(
+          $item,
+          array('vars' => $tplVarIds)
+        );
       }
 
-      foreach ([$pages, $features, $templates] as $arr) {
+      $templateVarIds = array_merge(...array_reduce($templates, fn($carry, $item) => [...$carry, $item['vars']], []));
+      $templateVarsList = $this->modx->getCollection(
+        \modTemplateVar::class,
+        array('id:IN' => array_unique($templateVarIds))
+      );
+      foreach ($templateVarsList as $data) {
+        $templateVars[] = array(
+          'id' => $data->id,
+          'name' => $data->name,
+          'caption' => $data->caption,
+          'description' => $data->description,
+          'type' => $data->type,
+          'display' => $data->display,
+          'default_text' => $data->default_text,
+          'content' => $data->content
+        );
+      }
+
+      foreach ([$pages, $features, $templates, $templateVars] as $arr) {
         usort($arr, fn($a, $b) => $a['id'] - $b['id']);
       }
 
@@ -81,6 +115,7 @@ class GetController extends AuthController
         'features' => $features,
         'parents' => $parents,
         'templates' => $templates,
+        'variables' => $templateVars,
         'success' => true
       );
     }
