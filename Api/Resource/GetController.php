@@ -20,6 +20,7 @@ class GetController extends AuthController
     $pubResourcesList = $this->modx->getCollection(\modResource::class, $props);
     /*
     8 - ДЕТСКОЕ ОТДЕЛЕНИЕ;
+    37 - Оборудование;
     40 - Отзывы;
     168 - Рефлексотерапия;
     230 - Хайлайты;
@@ -40,7 +41,7 @@ class GetController extends AuthController
         $parentsList[] = $res->parent;
         $tplIds[] = $res->template;
 
-        if(in_array($res->parent, [40,230,240,243,356])) {
+        if(in_array($res->parent, [37,40,230,240,243,356])) {
           $features[] = $data;
         } else {
           $pages[] = $data;
