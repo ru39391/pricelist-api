@@ -14,7 +14,7 @@ class GetController extends BaseController
   {
     $address = [];
     $phones = [];
-    $options = [];
+    $site = [];
 
     foreach (['city', 'address'] as $key) {
       $address[$key] = $this->modx->getOption('default__contacts_' . $key);
@@ -25,16 +25,14 @@ class GetController extends BaseController
     }
 
     foreach (['url', 'name'] as $key) {
-      $options[$key] = $this->modx->getOption('site_' . $key);
+      $site[$key] = $this->modx->getOption('site_' . $key);
     }
 
-    $response = array_merge(
-      $options,
-      array(
-        'address' => $address,
-        'phones' => $phones,
-        'nav' => $this->setItemsArr(),
-      )
+    $response = array(
+      'site' => $site,
+      'address' => $address,
+      'phones' => $phones,
+      'nav' => $this->setNavItems(),
     );
 
     return jsonx($response, [], 200);

@@ -6,7 +6,7 @@ use Zoomx\Controllers\Constants;
 
 trait HelpersTrait
 {
-  public function setItemsData($item)
+  private function setUri($item)
   {
     $url = '';
     $isWebLink = $item['class_key'] === 'modWebLink';
@@ -17,20 +17,31 @@ trait HelpersTrait
       $url =  $isIdLinkExist ? $data->uri : $data;
     }
 
+    return $isWebLink ? $url : $item['uri'];
+  }
+
+  public function setItemsData($item)
+  {
+    $url = $this->setUri($item);
+
+    if (substr($url, -1) === '/') {
+      $url = rtrim($url, '/');
+    }
+
     return array(
       'id' => $item['id'],
       //'alias' => $item['alias'],
       'menuindex' => $item['menuindex'],
       'menutitle' => $item['menutitle'],
       'pagetitle' => $item['pagetitle'],
-      'uri' => $isWebLink ? $url : $item['uri'],
-      'classKey' => $item['class_key'],
+      'uri' => $url,
+      'class_key' => $item['class_key'],
       'properties' => $item['properties']
     );
   }
 
   // TODO: изменить id
-  public function setItemsArr($isNav = true, $parent = 0, $picIds = [3,4], $sortBy = 'menuindex', $sortDir = 'ASC')
+  public function setItemsArr($isNav, $parent, $picIds, $sortBy = 'menuindex', $sortDir = 'ASC')
   {
     $items = [];
 
@@ -46,7 +57,7 @@ trait HelpersTrait
 
     foreach ($itemsList as $data) {
       $isDataExist = count($picIds) === 0;
-      $pictures = array_map(fn($picId) => $data->getTVValue($picId), $picIds);
+      $pictures = $isDataExist ? [] : array_map(fn($picId) => $data->getTVValue($picId), $picIds);
 
       if($isDataExist || array_reduce($pictures, fn($carry, $item) => $carry && (bool)$item, true)) {
         $items[] = array_merge(
@@ -65,12 +76,16 @@ trait HelpersTrait
       }
     }
 
-    if($sortDir === 'ASC') {
-      usort($items, fn($a, $b) => $a[$sortBy] - $b[$sortBy]);
-    } else {
-      usort($items, fn($a, $b) => $b[$sortBy] - $a[$sortBy]);
-    }
+    usort(
+      $items,
+      fn($a, $b) => $sortDir === 'DESC' ? $b[$sortBy] - $a[$sortBy] : $a[$sortBy] - $b[$sortBy]
+    );
 
     return $items;
+  }
+
+  public function setNavItems()
+  {
+    return $this->setItemsArr(true, 0, [3,4]);
   }
 }

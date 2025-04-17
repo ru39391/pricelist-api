@@ -12,7 +12,7 @@ class GetController extends BaseController
 
   public function index()
   {
-    $nav = $this->setItemsArr();
+    $nav = $this->setNavItems();
     $docsNav = [];
     $panelNav = [];
     $address = [];
